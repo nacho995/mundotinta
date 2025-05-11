@@ -1,0 +1,270 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground;
+  @apply dark:bg-dark_background dark:text-dark_foreground;
+  @apply dark:bg-[radial-gradient(ellipse_at_bottom,_#1B2735_0%,_#090A0F_100%)];
+}
+
+/* Estilos base para enlaces usando colores directos */
+a {
+  @apply text-primary hover:text-primary/80;
+  @apply dark:text-dark_primary dark:hover:text-dark_primary/80;
+  @apply transition-colors;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 8px theme('colors.purple.500');
+  }
+  
+  .text-fantasy {
+    text-shadow: 0 0 8px theme('colors.purple.500'), 0 0 15px theme('colors.purple.500');
+  }
+  
+  .text-scifi {
+    text-shadow: 0 0 8px theme('colors.cyan.500'), 0 0 15px theme('colors.cyan.500');
+  }
+}
+
+/* Actualizar gradientes si usan variables que ya no existen */
+/* Ejemplo: usar los colores directos de Tailwind */
+
+@keyframes backgroundPan {
+  0% { background-position: 0% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Animación para estrellas del fondo */
+@keyframes twinkleBackground {
+  0% { opacity: 0.5; filter: brightness(0.8); }
+  50% { opacity: 0.7; filter: brightness(1.2); }
+  100% { opacity: 0.6; filter: brightness(1); }
+}
+
+.text-animated-gradient {
+  /* Modo claro usa colores base */
+  background: linear-gradient(
+    to right,
+    theme('colors.primary'), 
+    theme('colors.fuchsia.400'),
+    theme('colors.primary')
+  );
+  /* Modo oscuro usa colores dark_* */
+  @apply dark:bg-gradient-to-r dark:from-dark_primary dark:via-fuchsia-500 dark:to-dark_primary;
+  
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: backgroundPan 5s linear infinite;
+}
+
+/* --- Animated Card Border --- */
+/* Simplificado o comentado temporalmente si causa problemas */
+/* 
+@keyframes spinBorder { 
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.card-border-gradient::after {
+  content: '';
+  position: absolute;
+  top: -50%; 
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    transparent,
+    transparent,
+    theme('colors.primary'), 
+    theme('colors.fuchsia.400')
+  );
+  @apply dark:bg-[conic-gradient(transparent,transparent,theme('colors.dark_primary'),theme('colors.fuchsia.400'))];
+  animation: spinBorder 6s linear infinite;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: -1; 
+}
+
+.group:hover .card-border-gradient::after {
+  opacity: 0.6; 
+}
+*/
+
+main {
+  position: relative; 
+  z-index: 1;
+}
+
+/* Efectos de tarjetas y elementos */
+.card-glass {
+  @apply bg-white/10 backdrop-blur-lg border border-white/20;
+  @apply dark:bg-white/5 dark:border-white/10;
+}
+
+.card-glass-hover {
+  @apply hover:bg-white/20 hover:border-white/30;
+  @apply dark:hover:bg-white/10 dark:hover:border-white/20;
+  @apply transition-all duration-300;
+}
+
+/* Efecto de borde brillante para tarjetas */
+.card-glowing-border {
+  @apply relative overflow-hidden;
+}
+
+.card-glowing-border::before {
+  content: '';
+  @apply absolute -inset-[0.5px] bg-gradient-to-r from-purple-600 via-fuchsia-500 to-teal-400 rounded-lg opacity-0;
+  @apply transition-opacity duration-500;
+}
+
+.card-glowing-border:hover::before {
+  @apply opacity-100;
+}
+
+/* Efectos de hover para botones */
+.btn-magic {
+  @apply relative overflow-hidden bg-gradient-to-r from-violet-600 to-purple-600;
+  @apply hover:from-violet-500 hover:to-purple-500;
+  @apply shadow-md hover:shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40;
+  @apply transition-all duration-300;
+}
+
+.btn-magic::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full;
+  @apply hover:translate-x-full transition-transform duration-1000;
+}
+
+/* Animación de brillo que se mueve */
+@keyframes shine {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+.animate-shine {
+  animation: shine 4s linear infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animación de destello */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+/* Animación del cursor de escritura */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Nebulosas y efectos de fondo */
+.nebula-bg {
+  background-image: url('/images/nebula-texture.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  mix-blend-mode: screen;
+}
+
+/* Utilities de animación y efectos */
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-700 {
+  animation-delay: 700ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.animation-delay-1500 {
+  animation-delay: 1500ms;
+}
+
+/* Utilidades para elementos 3D */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Efectos de hover personalizados */
+.hover-scale {
+  @apply transition-transform duration-300 hover:scale-105;
+}
+
+.hover-rotate {
+  @apply transition-transform duration-300 hover:rotate-3;
+}
+
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-2;
+}
+
+/* Efectos de luz y brillo */
+.glow-sm {
+  box-shadow: 0 0 8px theme('colors.purple.500');
+}
+
+.glow-md {
+  box-shadow: 0 0 15px theme('colors.purple.500');
+}
+
+.glow-lg {
+  box-shadow: 0 0 25px theme('colors.purple.500');
+}
+
+/* Bordes de neón */
+.neon-border {
+  @apply border border-purple-500/50;
+  box-shadow: 0 0 5px theme('colors.purple.500'), 
+              0 0 10px theme('colors.purple.500'), 
+              inset 0 0 5px theme('colors.purple.500');
+}

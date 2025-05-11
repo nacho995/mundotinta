@@ -1,0 +1,165 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Para redirigir después del registro
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+
+export default function RegisterPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccessMessage('');
+    setIsLoading(true);
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden.');
+      setIsLoading(false);
+      return;
+    }
+    if (!name || !email || !password) {
+      setError('Todos los campos son obligatorios.');
+      setIsLoading(false);
+      return;
+    }
+    
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, confirmPassword }),
+      });
+      
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Algo salió mal durante el registro');
+      }
+      
+      setSuccessMessage(data.message || '¡Registro exitoso! Redirigiendo a login...');
+      // Aquí podrías guardar el token (data.token) en localStorage/context si haces login automático
+      // console.log('Token de registro:', data.token);
+      setName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setTimeout(() => router.push('/login'), 2500); // Redirigir después de 2.5 seg
+    } catch (err) {
+      console.error('Error en registro:', err);
+      setError(err.message || 'Error al crear la cuenta.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <main 
+      className="flex min-h-screen flex-col items-center justify-center p-8 md:p-12 lg:p-24 bg-stone-950 text-white"
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239a8478' fill-opacity='0.09'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        backgroundColor: '#1c1a17',
+      }}
+    >
+      <div className="w-full max-w-md bg-stone-900/90 backdrop-blur-sm p-8 md:p-10 rounded-xl shadow-2xl border border-amber-700/30">
+        <h1 className="text-3xl md:text-4xl font-serif font-bold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">
+          Crear Nueva Cuenta
+        </h1>
+        <div className="w-24 h-px bg-gradient-to-r from-amber-600/0 via-amber-500 to-amber-600/0 mx-auto mb-8"></div>
+        
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-stone-300 mb-1 font-serif">
+              Nombre Completo
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full p-3 bg-stone-800/70 border border-amber-700/40 rounded-md focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:shadow-md focus:shadow-amber-500/30 transition-all placeholder-stone-500 text-stone-200"
+              placeholder="Tu nombre"
+              required
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-stone-300 mb-1 font-serif">
+              Correo Electrónico
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 bg-stone-800/70 border border-amber-700/40 rounded-md focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:shadow-md focus:shadow-amber-500/30 transition-all placeholder-stone-500 text-stone-200"
+              placeholder="tu@email.com"
+              required
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-stone-300 mb-1 font-serif">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 bg-stone-800/70 border border-amber-700/40 rounded-md focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:shadow-md focus:shadow-amber-500/30 transition-all placeholder-stone-500 text-stone-200"
+              placeholder="Mínimo 6 caracteres"
+              required
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-stone-300 mb-1 font-serif">
+              Confirmar Contraseña
+            </label>
+            <input
+              type="password"
+              name="confirmPassword"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full p-3 bg-stone-800/70 border border-amber-700/40 rounded-md focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:shadow-md focus:shadow-amber-500/30 transition-all placeholder-stone-500 text-stone-200"
+              placeholder="Repite tu contraseña"
+              required
+              disabled={isLoading}
+            />
+          </div>
+
+          {successMessage && <p className="text-sm text-green-400 font-serif py-2">{successMessage}</p>}
+          {error && <p className="text-sm text-red-400 font-serif py-2">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isLoading ? 'Creando cuenta...' : 'Crear Cuenta'}
+          </button>
+        </form>
+        <p className="mt-8 text-center text-sm text-stone-400 font-serif">
+          ¿Ya tienes una cuenta?{' '}
+          <Link href="/login" className="font-medium text-amber-400 hover:text-amber-300 transition-colors">
+            Inicia Sesión Aquí
+          </Link>
+        </p>
+      </div>
+    </main>
+  );
+} 
