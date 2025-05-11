@@ -1,60 +1,45 @@
-# 1. Etapa de Dependencias (deps)
-FROM node:22-alpine AS deps
-WORKDIR /app
+# Etapa 1: Build de la aplicación
+FROM node:20 AS builder
 
-# Copiar package.json y package-lock.json
-COPY package.json package-lock.json* ./
+WORKDIR /app/frontend
 
-# Instalar dependencias (usando npm ci para instalaciones limpias basadas en lockfile)
-RUN npm ci
+# Copiar archivos de manifiesto de paquete
+COPY package.json ./
+# Copiar package-lock.json si existe, si no, npm install aún funcionará pero es menos determinista
+COPY package-lock.json* ./
 
-# --------------------------------------------------------------------
+# Instalar todas las dependencias (incluyendo devDependencies para el build)
+RUN npm install
 
-# 2. Etapa de Construcción (builder)
-FROM node:22-alpine AS builder
-WORKDIR /app
-
-# Copiar dependencias desde la etapa 'deps'
-COPY --from=deps /app/node_modules ./node_modules
-# Copiar el resto del código de la aplicación
+# Copiar el resto del código de la aplicación frontend
 COPY . .
 
-# Variables de entorno para la build (si son necesarias)
-# ENV NEXT_TELEMETRY_DISABLED 1
-
-# Construir la aplicación Next.js
+# Construir la aplicación Next.js para producción
 RUN npm run build
 
-# --------------------------------------------------------------------
+# Etapa 2: Servir la aplicación (Producción)
+FROM node:20-alpine
 
-# 3. Etapa Final (runner)
-FROM node:22-alpine AS runner
-WORKDIR /app
+WORKDIR /app/frontend
 
-# Variables de entorno para producción
-ENV NODE_ENV production
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Copiar package.json y package-lock.json desde la etapa de builder
+COPY --from=builder /app/frontend/package.json ./
+COPY --from=builder /app/frontend/package-lock.json* ./
 
-# Crear usuario no root (recomendado por seguridad)
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Instalar solo dependencias de producción
+RUN npm ci --omit=dev
 
-# Copiar artefactos de build necesarios desde la etapa 'builder'
-# Necesitamos la carpeta standalone generada gracias a output: 'standalone'
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-# Necesitamos las carpetas public y .next/static para los assets
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copiar los artefactos de build de la aplicación desde la etapa de builder
+COPY --from=builder /app/frontend/.next ./.next
+COPY --from=builder /app/frontend/public ./public
 
-# Cambiar al usuario no root
-USER nextjs
-
-# Exponer el puerto en el que corre la aplicación Next.js (por defecto 3000)
+# Exponer el puerto en el que corre la aplicación Next.js
 EXPOSE 3000
 
-# Variable de entorno para el puerto (opcional, Next.js lo detecta)
-ENV PORT 3000
+# Variables de entorno para producción (Next.js necesita saber que es producción)
+ENV NODE_ENV=production
+# El hostname 0.0.0.0 es necesario para que sea accesible desde fuera del contenedor
+ENV HOSTNAME="0.0.0.0"
 
 # Comando para iniciar la aplicación
-# Node.js ejecutará el servidor desde la carpeta standalone
-CMD ["node", "server.js"] 
+CMD ["npm", "start", "--", "-H", "0.0.0.0"] 

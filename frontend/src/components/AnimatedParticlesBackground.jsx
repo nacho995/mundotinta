@@ -21,6 +21,86 @@ const AnimatedParticlesBackground = () => {
     console.log("Partículas cargadas", container); 
   }, []);
 
+  // Opciones para las partículas de tsparticles
+  const particlesOptions = useMemo(() => ({
+    fpsLimit: 60,
+    interactivity: {
+      events: {
+        onHover: {
+          enable: true,
+          mode: "repulse", // repele las partículas al pasar el ratón
+        },
+        onClick: {
+          enable: true,
+          mode: "push", // empuja partículas al hacer clic
+        },
+      },
+      modes: {
+        repulse: {
+          distance: 100,
+          duration: 0.4,
+        },
+        push: {
+          quantity: 4,
+        },
+      },
+    },
+    particles: {
+      color: {
+        value: "#D4AF37", // Dorado sutil
+      },
+      links: {
+        color: "#D4AF37",
+        distance: 150,
+        enable: true,
+        opacity: 0.2, // Líneas sutiles
+        width: 1,
+      },
+      move: {
+        direction: "none",
+        enable: true,
+        outModes: {
+          default: "bounce",
+        },
+        random: true, // Movimiento más aleatorio
+        speed: 0.5, // Velocidad muy lenta para un efecto etéreo
+        straight: false,
+      },
+      number: {
+        density: {
+          enable: true,
+          area: 1000, // Mayor área para menos densidad
+        },
+        value: 50, // Número reducido de partículas para sutileza
+      },
+      opacity: {
+        value: {min: 0.1, max: 0.4}, // Opacidad variable para efecto de parpadeo
+        animation: {
+          enable: true,
+          speed: 1,
+          minimumValue: 0.05,
+          sync: false
+        }
+      },
+      shape: {
+        type: "circle",
+      },
+      size: {
+        value: { min: 0.5, max: 2 }, // Partículas pequeñas
+        animation: {
+          enable: true,
+          speed: 2,
+          minimumValue: 0.3,
+          sync: false
+        }
+      },
+    },
+    detectRetina: true,
+    background: { // Es importante que el background de tsparticles sea transparente
+      color: "transparent",
+    }
+  }), []);
+
   // Fondo base: gradiente sutil en tonos piedra oscuros y vino tinto, con textura de papel.
   const backgroundStyle = {
     position: "fixed",
@@ -103,6 +183,9 @@ const AnimatedParticlesBackground = () => {
         <div style={backgroundStyle}></div>
         <div style={textureStyle}></div>
         <div style={globalGlowEffect}></div>
+
+        {/* Renderiza las partículas de tsparticles */}
+        <Particles id="tsparticles" options={particlesOptions} particlesLoaded={particlesLoaded} />
 
         {/* Líneas decorativas doradas fijas */}
         <div style={particlesContainerStyle}>
