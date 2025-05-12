@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: mundo-tinta-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: https://mundotinta.vercel.app # Ajusta esto a la URL real de tu frontend en Vercel
