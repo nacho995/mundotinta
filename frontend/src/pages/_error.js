@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 function Error({ statusCode }) {
   return (
@@ -12,12 +13,11 @@ function Error({ statusCode }) {
         <p className="text-stone-300 mb-8">
           Lo sentimos, ha ocurrido un problema al cargar esta página.
         </p>
-        <a
-          href="/"
-          className="px-6 py-2 bg-gradient-to-r from-[#A0522D] to-[#8B4513] text-white font-semibold rounded-md shadow-md"
-        >
-          Volver a la página principal
-        </a>
+        <Link href="/">
+          <span className="px-6 py-2 bg-gradient-to-r from-[#A0522D] to-[#8B4513] text-white font-semibold rounded-md shadow-md inline-block cursor-pointer">
+            Volver a la página principal
+          </span>
+        </Link>
       </div>
     </div>
   );
