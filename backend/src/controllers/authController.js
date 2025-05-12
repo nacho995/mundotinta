@@ -1,15 +1,22 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User'); // Modelo de Mongoose
-const sendEmail = require('../utils/emailSender'); // Importar el nuevo emailSender
-// const validator = require('validator'); // Para validaciones más específicas
+const emailService = require('../services/emailService');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'unaClaveSecretaMuyLargaParaDesarrollo';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '2h';
+// Secret key para JWT - Idealmente usar variables de entorno
+const JWT_SECRET = process.env.JWT_SECRET || 'mundotinta-secret-key';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-// Función para generar un token JWT
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, JWT_SECRET, {
+// Función para generar un token JWT con más información del usuario
+const generateToken = (user) => {
+  // Incluir información adicional en el token para reducir consultas a la base de datos
+  return jwt.sign({ 
+    id: user._id, 
+    name: user.name,
+    email: user.email,
+    role: user.role || 'user'
+  }, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
   });
 };
@@ -27,27 +34,53 @@ exports.registerUser = async (req, res) => {
   try {
     // Mongoose maneja la unicidad del email con `unique: true` en el esquema.
     // Si se intenta crear un usuario con un email existente, Mongoose arrojará un error (E11000).
+    
+    // Generar un token de verificación de email
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 horas
+    
     const newUser = await User.create({
       name,
       email,
       password,
+      emailVerificationToken: verificationToken,
+      emailVerificationExpires: verificationExpires,
+      isEmailVerified: false
     });
 
     // El pre-hook de 'save' en el modelo User ya hashea la contraseña.
     // El campo 'password' se omite por defecto en las respuestas gracias a `select: false`.
 
-    const token = generateToken(newUser._id);
-    
     // Devolvemos el usuario sin la contraseña (Mongoose lo hace por defecto con select:false)
     // Para ser explícitos o si no se usara select:false:
     const userResponse = newUser.toObject();
     delete userResponse.password; // Aunque select:false ya lo haría
     delete userResponse.__v; // Opcional: quitar el campo de versión de Mongoose
+    delete userResponse.emailVerificationToken;
+    delete userResponse.emailVerificationExpires;
+    
+    // Generar token con el objeto usuario completo
+    const token = generateToken(newUser);
+    
+    // Crear enlace de verificación
+    const verificationLink = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
+    
+    // Enviar email de confirmación de registro
+    const emailResult = await emailService.sendRegistrationEmail(
+      newUser,
+      verificationLink
+    );
+    
+    // El envío del correo es asincrónico y no bloqueante para la respuesta al usuario
+    if (!emailResult.success) {
+      console.error('No se pudo enviar el correo de verificación:', emailResult.error);
+    }
 
     res.status(201).json({
-      message: 'Usuario registrado con éxito',
+      message: 'Usuario registrado con éxito. Por favor, verifica tu correo electrónico.',
       token,
       user: userResponse,
+      emailSent: emailResult.success
     });
 
   } catch (error) {
@@ -84,8 +117,9 @@ exports.loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: 'Credenciales incorrectas.' }); // Mensaje genérico
     }
-
-    const token = generateToken(user._id);
+    
+    // Generar token con el objeto usuario completo
+    const token = generateToken(user);
     
     const userResponse = user.toObject();
     delete userResponse.password;
@@ -99,7 +133,153 @@ exports.loginUser = async (req, res) => {
 
   } catch (error) {
     console.error('Error en login:', error);
-    res.status(500).json({ message: 'Error al iniciar sesión.' });
+    res.status(500).json({ message: 'Error al iniciar sesión' });
+  }
+};
+
+// Verificar email
+exports.verifyEmail = async (req, res) => {
+  const { token } = req.query;
+  
+  if (!token) {
+    return res.status(400).json({ message: 'Token no proporcionado' });
+  }
+  
+  try {
+    // Buscar usuario por token de verificación
+    const user = await User.findOne({
+      emailVerificationToken: token,
+      emailVerificationExpires: { $gt: Date.now() }
+    });
+    
+    if (!user) {
+      return res.status(400).json({ 
+        message: 'El token de verificación es inválido o ha expirado' 
+      });
+    }
+    
+    // Actualizar usuario
+    user.isEmailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    await user.save();
+    
+    return res.status(200).json({
+      message: 'Email verificado con éxito. Ya puedes iniciar sesión.'
+    });
+  } catch (error) {
+    console.error('Error al verificar email:', error);
+    return res.status(500).json({ message: 'Error al verificar email' });
+  }
+};
+
+// Solicitar recuperación de contraseña
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  
+  if (!email) {
+    return res.status(400).json({ message: 'Por favor, proporciona tu email' });
+  }
+  
+  try {
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      // Por seguridad, siempre respondemos lo mismo incluso si el usuario no existe
+      return res.status(200).json({
+        message: 'Si tu email está registrado, recibirás un correo con instrucciones para restablecer tu contraseña'
+      });
+    }
+    
+    // Generar token de restablecimiento y su fecha de expiración
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.passwordResetToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+    user.passwordResetExpires = Date.now() + 30 * 60 * 1000; // 30 minutos
+    
+    await user.save({ validateBeforeSave: false });
+    
+    // Crear enlace de restablecimiento de contraseña
+    const resetLink = `${FRONTEND_URL}/restablecer-contrasena?token=${resetToken}`;
+    
+    // Enviar email
+    const emailResult = await emailService.sendPasswordResetEmail(user, resetLink);
+    
+    if (!emailResult.success) {
+      // Si falla el envío, revertimos los cambios
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+      
+      console.error('Error al enviar email de recuperación:', emailResult.error);
+      return res.status(500).json({ 
+        message: 'No se pudo enviar el email de recuperación. Por favor, inténtalo de nuevo más tarde.' 
+      });
+    }
+    
+    res.status(200).json({
+      message: 'Si tu email está registrado, recibirás un correo con instrucciones para restablecer tu contraseña'
+    });
+  } catch (error) {
+    console.error('Error en recuperación de contraseña:', error);
+    res.status(500).json({ message: 'Error al procesar la solicitud' });
+  }
+};
+
+// Restablecer contraseña
+exports.resetPassword = async (req, res) => {
+  const { token } = req.query;
+  const { password, confirmPassword } = req.body;
+  
+  if (!token) {
+    return res.status(400).json({ message: 'Token no proporcionado' });
+  }
+  
+  if (!password || !confirmPassword) {
+    return res.status(400).json({ message: 'Por favor, proporciona ambas contraseñas' });
+  }
+  
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: 'Las contraseñas no coinciden' });
+  }
+  
+  try {
+    // Hashear el token proporcionado para compararlo con el de la base de datos
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+    
+    // Buscar usuario por token
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() }
+    });
+    
+    if (!user) {
+      return res.status(400).json({ 
+        message: 'El token es inválido o ha expirado. Por favor, solicita un nuevo enlace.' 
+      });
+    }
+    
+    // Actualizar contraseña
+    user.password = password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+    
+    // Login automático (opcional)
+    const loginToken = generateToken(user);
+    
+    res.status(200).json({
+      message: 'Contraseña actualizada con éxito',
+      token: loginToken
+    });
+  } catch (error) {
+    console.error('Error al restablecer contraseña:', error);
+    res.status(500).json({ message: 'Error al restablecer la contraseña' });
   }
 };
 

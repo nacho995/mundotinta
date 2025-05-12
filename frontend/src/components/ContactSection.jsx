@@ -1,5 +1,8 @@
 'use client';
 
+import Link from 'next/link';
+import ClientContactParticles from '@/components/ClientContactParticles';
+
 export default function ContactSection() {
   return (
     <section id="contacto" className="w-full py-24 md:py-32 relative overflow-hidden">
@@ -45,25 +48,12 @@ export default function ContactSection() {
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-amber-600/20 to-amber-500/20 rounded-xl blur opacity-75"></div>
               <div className="relative px-8 py-10 rounded-xl bg-gradient-to-b from-red-900/80 to-stone-900/80 backdrop-blur-sm border border-amber-700/30 shadow-xl">
                 {/* Botón de contacto con estilo de cuero */}
-                <a 
-                  href="mailto:contacto@mundotinta.com"
+                <Link 
+                  href="/contacto"
                   className="relative overflow-hidden inline-flex items-center justify-center px-8 py-4 text-base font-medium text-[#e6c9ab] bg-gradient-to-r from-[#8B4513] to-[#5e4534] hover:from-[#A0522D] hover:to-[#8B4513] rounded-lg transition-all duration-300 shadow-lg border border-[#d3a87d]/30 group/btn transform hover:scale-105"
                 >
                   {/* Partículas brillantes */}
-                  <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500">
-                    {[...Array(10)].map((_, i) => (
-                      <span 
-                        key={i}
-                        className="absolute w-1 h-1 bg-[#d3a87d] rounded-full animate-particle"
-                        style={{
-                          top: `${Math.random() * 100}%`,
-                          left: `${Math.random() * 100}%`,
-                          animationDelay: `${Math.random() * 2}s`,
-                          animationDuration: `${Math.random() * 2 + 1}s`,
-                        }}
-                      />
-                    ))}
-                  </div>
+                  <ClientContactParticles />
                   
                   {/* Resplandor de borde */}
                   <div className="absolute -inset-1 opacity-0 group-hover/btn:opacity-100 bg-gradient-to-r from-[#b87333] via-[#d3a87d] to-[#b87333] rounded-lg blur-md transition-all duration-500 group-hover/btn:duration-200"></div>
@@ -74,7 +64,7 @@ export default function ContactSection() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>
                   </span>
-                </a>
+                </Link>
                 
                 {/* Información de contacto con estilo de tinta sobre papel */}
                 <div className="grid md:grid-cols-3 gap-8 mt-12">

@@ -85,5 +85,28 @@ const getBookById = async (req, res) => {
     res.status(500).json({ message: 'Error del servidor al obtener el libro' });
   }
 };
+// @desc    Obtener los libros favoritos del usuario
+// @route   GET /api/books/favorites
+// @access  Private (requiere autenticación)
+const getUserFavorites = async (req, res) => {
+  try {
+    const userId = req.userId; // Obtenido del middleware de autenticación
+    
+    // Por ahora, simulamos que todos los usuarios tienen los mismos favoritos
+    // En una implementación real, obtendríamos esto de una base de datos
+    // usando el userId para filtrar los favoritos específicos del usuario
+    
+    // Elegimos algunos libros de muestra como favoritos
+    const userFavorites = sampleBooks.slice(0, 2).map(book => ({
+      ...book,
+      addedToFavorites: new Date().toISOString() // Simulamos una fecha de adición
+    }));
+    
+    res.json({ favorites: userFavorites });
+  } catch (error) {
+    console.error('Error al obtener los libros favoritos:', error);
+    res.status(500).json({ message: 'Error del servidor al obtener los favoritos' });
+  }
+};
 
-module.exports = { getBooks, getBookById }; 
+module.exports = { getBooks, getBookById, getUserFavorites }; 

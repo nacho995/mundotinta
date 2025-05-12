@@ -23,6 +23,17 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'La contraseña debe tener al menos 6 caracteres.'],
     select: false, // Para no enviar la contraseña por defecto en las consultas
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  emailVerificationToken: String,
+  emailVerificationExpires: Date,
   createdAt: {
     type: Date,
     default: Date.now,

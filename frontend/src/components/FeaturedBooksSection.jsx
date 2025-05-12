@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import BookCard from '@/components/BookCard';
 import { placeholderBooks } from '@/data/placeholderBooks';
+import Link from 'next/link';
+import ClientParticles from '@/components/ClientParticles';
 
 export default function FeaturedBooksSection() {
   // Estado para los filtros y libros
@@ -126,26 +128,13 @@ export default function FeaturedBooksSection() {
         
         {/* Botón estilo biblioteca antigua */}
         <div className="text-center mt-20">
-          <a href="#" 
+          <Link href="/biblioteca"
              className="relative overflow-hidden inline-flex items-center justify-center px-10 py-4 text-lg
                      bg-gradient-to-r from-[#8B4513] to-[#5e4534] hover:from-[#A0522D] hover:to-[#8B4513]
                      text-[#e6c9ab] shadow-xl
                      rounded-sm border border-[#d3a87d]/30 group/btn transform hover:scale-105 transition-all duration-300 font-serif tracking-widest">
             {/* Partículas brillantes */}
-            <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500">
-              {[...Array(15)].map((_, i) => (
-                <span 
-                  key={i}
-                  className="absolute w-1 h-1 bg-[#d3a87d] rounded-full animate-particle"
-                  style={{
-                    top: `${Math.random() * 100}%`,
-                    left: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * 2}s`,
-                    animationDuration: `${Math.random() * 2 + 1}s`,
-                  }}
-                />
-              ))}
-            </div>
+            <ClientParticles />
             
             {/* Resplandor de borde */}
             <div className="absolute -inset-1 opacity-0 group-hover/btn:opacity-100 bg-gradient-to-r from-[#b87333] via-[#d3a87d] to-[#b87333] rounded-lg blur-md transition-all duration-500 group-hover/btn:duration-200"></div>
@@ -162,7 +151,7 @@ export default function FeaturedBooksSection() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
               </svg>
             </span>
-          </a>
+          </Link>
         </div>
         
         {/* Adorno inferior estilo biblioteca antigua */}

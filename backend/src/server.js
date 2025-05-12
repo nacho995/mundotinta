@@ -7,6 +7,9 @@ const connectDB = require('./config/db'); // Importar la función de conexión
 const authRoutes = require('./routes/authRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const bookRoutes = require('./routes/bookRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const userRoutes = require('./routes/userRoutes'); // Añadida ruta para gestión de usuarios
+const libraryRoutes = require('./routes/libraryRoutes'); // Añadida ruta para biblioteca de usuario
 
 // Conectar a la base de datos
 connectDB();
@@ -31,6 +34,9 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/books', bookRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/user', userRoutes); // Registrando las rutas de usuario
+app.use('/api/library', libraryRoutes); // Registrando las rutas de biblioteca de usuario
 
 // Manejador de errores básico (opcional, se puede mejorar)
 app.use((err, req, res, next) => {

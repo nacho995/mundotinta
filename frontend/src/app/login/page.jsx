@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { apiService } from '@/services/api';
 
 // Asegúrate de que esta URL sea la correcta para tu backend
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
@@ -38,10 +39,54 @@ export default function LoginPage() {
         throw new Error(data.message || 'Error al intentar iniciar sesión.');
       }
 
-      // Guardar el token (puedes usar localStorage o context API)
+      // Guardar el token y datos del usuario (puedes usar localStorage o context API)
       if (data.token) {
         localStorage.setItem('authToken', data.token);
+        
+        // Guardar los datos del usuario
+        if (data.user) {
+          // Guardar el nombre de usuario
+          if (data.user.name) {
+            localStorage.setItem('userName', data.user.name);
+          } else if (data.user.email) {
+            // Si no hay nombre, usar la parte inicial del email como alternativa
+            const userName = data.user.email.split('@')[0];
+            localStorage.setItem('userName', userName);
+          }
+          
+          // Guardar el correo electrónico
+          if (data.user.email) {
+            localStorage.setItem('userEmail', data.user.email);
+            
+            // Guardar datos completos del usuario en un objeto
+            const userData = {
+              email: data.user.email,
+              name: data.user.name || data.user.email.split('@')[0],
+              registeredOn: data.user.registeredOn || new Date().toISOString(),
+              id: data.user.id || 'user-' + Date.now()
+            };
+            
+            apiService.saveToLocalStorage('userData', userData);
+          }
+        } else {
+          // Si no hay datos del usuario en la respuesta, guardar al menos el email ingresado
+          localStorage.setItem('userEmail', email);
+          
+          const userData = {
+            email: email,
+            name: email.split('@')[0],
+            registeredOn: new Date().toISOString(),
+            id: 'user-' + Date.now()
+          };
+          
+          apiService.saveToLocalStorage('userData', userData);
+        }
+        
         // console.log('Login exitoso, token:', data.token);
+        
+        // Disparar evento personalizado para notificar cambio de autenticación
+        window.dispatchEvent(new Event('auth-state-changed'));
+        
         router.push('/my-books'); // Redirigir a la página de Mis Libros
       } else {
         throw new Error(data.message || 'No se recibió token del servidor.');

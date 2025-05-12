@@ -49,7 +49,10 @@ const config = {
         'blob': 'blob 7s infinite',
         'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'float': 'float 6s ease-in-out infinite',
+        'float-slow': 'float 8s ease-in-out infinite',
+        'float-enhanced': 'floatEnhanced 10s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
+        'glow-intense': 'glowIntense 3s ease-in-out infinite alternate',
         'shimmer': 'shimmer 2s linear infinite',
         'shine': 'shine 4s linear infinite',
         'spin-slow': 'spin 8s linear infinite',
@@ -58,6 +61,9 @@ const config = {
         'twinkle': 'twinkle 4s ease-in-out infinite',
         'ping-slow': 'ping 4s cubic-bezier(0, 0, 0.2, 1) infinite',
         'blink': 'blink 1s step-end infinite',
+        'fade-in': 'fadeIn 1.5s ease-out forwards',
+        'reverse-spin-slow': 'reverseSpin 12s linear infinite',
+        'page-flip': 'pageFlip 1.5s ease-in-out forwards',
       },
       keyframes: {
         blob: {
@@ -78,9 +84,21 @@ const config = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-20px)' },
         },
+        floatEnhanced: {
+          '0%': { transform: 'translateY(0) translateX(0)' },
+          '25%': { transform: 'translateY(-15px) translateX(10px)' },
+          '50%': { transform: 'translateY(-25px) translateX(0)' },
+          '75%': { transform: 'translateY(-10px) translateX(-10px)' },
+          '100%': { transform: 'translateY(0) translateX(0)' },
+        },
         glow: {
           '0%': { boxShadow: '0 0 0 0 rgba(139, 92, 246, 0.4)' },
           '100%': { boxShadow: '0 0 25px 5px rgba(139, 92, 246, 0.7)' },
+        },
+        glowIntense: {
+          '0%': { boxShadow: '0 0 5px 2px rgba(245, 158, 11, 0.5)' },
+          '50%': { boxShadow: '0 0 25px 8px rgba(245, 158, 11, 0.7)' },
+          '100%': { boxShadow: '0 0 10px 3px rgba(245, 158, 11, 0.6)' },
         },
         shimmer: {
           '100%': {
@@ -89,7 +107,16 @@ const config = {
         },
         shine: {
           '0%': { left: '-100%' },
+          '50%': { left: '100%' },
           '100%': { left: '100%' },
+        },
+        reverseSpin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(-360deg)' },
+        },
+        pageFlip: {
+          '0%': { transform: 'rotateY(0deg)' },
+          '100%': { transform: 'rotateY(-180deg)' },
         },
         backgroundPan: {
           '0%': { backgroundPosition: '0% center' },
@@ -112,6 +139,10 @@ const config = {
         blink: {
           '0%, 100%': { opacity: 1 },
           '50%': { opacity: 0 },
+        },
+        fadeIn: {
+          '0%': { opacity: 0, transform: 'translateY(10px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
         },
       },
       borderRadius: {

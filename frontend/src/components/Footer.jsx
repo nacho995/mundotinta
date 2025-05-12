@@ -45,19 +45,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative py-16 overflow-hidden">
-      {/* Fondo con combinación de colores solicitados - semitransparente para ver iconos SVG */}
-      <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-900/90 to-stone-950/95 z-0"></div>
+    <footer className="relative py-16 overflow-hidden z-10">
+      {/* Fondo simplificado y elegante sin efectos semitransparentes */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-[#0a0807] to-black z-0"></div>
       
-      {/* Capa de efecto "BackdropFilter" para asegurar legibilidad del texto */}
-      <div className="absolute inset-0 backdrop-blur-[1px] z-[5]"></div>
-      
-      {/* Textura de cuero */}
-      <div className="absolute inset-0 opacity-10" 
-           style={{
-             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-             mixBlendMode: 'overlay'
-           }}></div>
+      {/* Línea decorativa superior */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#d4af37]/50 to-transparent z-10"></div>
       
       {/* Destellos sutiles */}
       <div className="absolute top-0 right-1/4 w-80 h-80 rounded-full bg-amber-900/5 filter blur-[100px]"></div>
@@ -130,22 +123,26 @@ export default function Footer() {
           {/* Secciones de navegación */}
           {footerSections.map((section, index) => (
             <div key={index} className="">
-              <h3 className={`text-${section.color}-400 font-serif font-medium mb-4 text-lg relative inline-block`}>
-                <span className="absolute inset-0 bg-stone-900/90 -z-10 blur-[0.5px] rounded"></span>
+              <h3 className={`text-${section.color}-400 font-serif font-medium mb-5 text-lg relative inline-block`}>
+                {/* Eliminado el fondo semitransparente y reemplazado por un subrayado elegante */}
                 {section.title}
+                <span className="absolute left-0 bottom-0 w-full h-[1px] bg-gradient-to-r from-transparent via-${section.color}-400/70 to-transparent"></span>
               </h3>
               <ul className="space-y-3">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                       <Link 
                       href={link.href}
-                      className="relative text-[#e6c9ab] hover:text-[#f0d8bc] transition-colors duration-300 flex items-center group py-0.5 px-1"
+                      className="relative text-[#e6c9ab] hover:text-[#f5e6cf] transition-all duration-300 flex items-center group py-1 px-2 rounded"
                     >
-                      {/* Fondo de pergamino estilizado - siempre visible */}
-                      <span className="absolute inset-0 bg-stone-900/70 backdrop-blur-[1px] shadow-inner border-l-2 border-[#A0522D]/40 rounded-sm -z-10"></span>
+                      {/* Fondo sutil para legibilidad pero elegante */}
+                      <span className="absolute inset-0 bg-black/70 backdrop-blur-sm -z-10 opacity-0 group-hover:opacity-80 transition-opacity duration-300 rounded"></span>
                       
-                      <span className={`text-[#b87333] mr-1.5 text-xs`}>•</span>
-                      <span className="relative">{link.name}</span>
+                      <span className={`text-[#b87333] mr-1.5 text-xs transition-all duration-300 group-hover:text-[#d4af37]`}>•</span>
+                      <span className="relative inline-block">
+                        {link.name}
+                        <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -154,51 +151,50 @@ export default function Footer() {
           ))}
         </div>
         
-        {/* Separador decorativo */}
+        {/* Separador decorativo elegante */}
         <div className="my-10 relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#A0522D]/30"></div>
+            <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#d4af37]/40 to-transparent"></div>
           </div>
           <div className="relative flex justify-center">
-            <div className="bg-stone-900/90 backdrop-blur-sm px-4 text-[#b87333] rounded-full shadow-inner border border-[#8B4513]/30 py-1">✧✧✧</div>
+            <div className="px-4 text-[#d4af37] py-1 relative">
+              <span>✧✧✧</span>
+            </div>
           </div>
         </div>
         
-        {/* Pie de página y copyright */}
+        {/* Pie de página y copyright - Diseño limpio sin fondos semitransparentes */}
         <div className="flex flex-col md:flex-row justify-between items-center text-sm pt-2">
           <p className="text-stone-300 mb-4 md:mb-0 relative inline-block px-3 py-1">
-            <span className="absolute inset-0 bg-stone-900/90 backdrop-blur-sm -z-10 rounded-md shadow-md"></span>
-            &copy; {currentYear} <span className="text-[#d3a87d]">Mundo Tinta</span>. Todos los derechos reservados.
+            &copy; {currentYear} <span className="text-[#d4af37]">Mundo Tinta</span>. Todos los derechos reservados.
           </p>
           
           <div className="flex space-x-6 relative px-4 py-1">
-            <span className="absolute inset-0 bg-stone-900/90 backdrop-blur-sm -z-10 rounded-md shadow-md"></span>
-            <Link href="#" className="text-stone-300 hover:text-[#d3a87d] transition-colors relative group">
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B4513]/40 group-hover:w-full transition-all duration-300"></span>
+            <Link href="#" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
               Política de Privacidad
             </Link>
-            <Link href="#" className="text-stone-300 hover:text-[#d3a87d] transition-colors relative group">
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B4513]/40 group-hover:w-full transition-all duration-300"></span>
+            <Link href="#" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
               Términos de Uso
             </Link>
-            <Link href="#" className="text-stone-300 hover:text-[#d3a87d] transition-colors relative group">
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B4513]/40 group-hover:w-full transition-all duration-300"></span>
+            <Link href="#" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
               Mapa del Sitio
             </Link>
           </div>
         </div>
         
-        {/* Firma discreta de diseño */}
+        {/* Firma discreta de diseño - Sin fondo semitransparente */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-stone-400 relative inline-block px-3 py-1 rounded-md">
-            <span className="absolute inset-0 bg-stone-900/90 backdrop-blur-sm -z-10 rounded shadow-inner"></span>
+          <p className="text-xs text-stone-400 relative inline-block px-3 py-1">
             Diseñado con <span className="text-red-500">❤️</span> para los amantes de la literatura fantástica.
           </p>
         </div>
       </div>
       
-      {/* Decoración inferior */}
-      <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-stone-900 via-amber-950 to-stone-900"></div>
+      {/* Decoración inferior elegante */}
+      <div className="absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#d4af37]/50 to-transparent"></div>
     </footer>
   );
 } 

@@ -12,8 +12,11 @@ router.post('/login', /* validateLogin, */ authController.loginUser);
 // POST /api/auth/forgot-password - Solicitar reseteo de contraseña
 router.post('/forgot-password', authController.forgotPassword);
 
-// POST /api/auth/reset-password/:token - Resetear la contraseña con un token
-router.post('/reset-password/:resetToken', authController.resetPassword);
+// POST /api/auth/reset-password - Resetear la contraseña con un token
+router.post('/reset-password', authController.resetPassword);
+
+// GET /api/auth/verify-email - Verificar email de usuario
+router.get('/verify-email', authController.verifyEmail);
 
 // GET /api/auth/me - (Opcional) Obtener datos del usuario autenticado (requiere middleware de autenticación)
 // router.get('/me', authMiddleware.protect, authController.getMe);

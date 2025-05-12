@@ -2,7 +2,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AnimatedParticlesBackground from "@/components/AnimatedParticlesBackground";
+import ChatBot from '@/components/ChatBot';
+import FloatingIcons from '@/components/FloatingIcons';
+import { CartProvider } from '@/context/CartContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,12 +27,17 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col relative bg-background text-foreground dark:bg-dark_background dark:text-dark_foreground`}
       >
-        <AnimatedParticlesBackground />
-        <Header />
-        <main className="flex-grow z-10">{/* Asegurar que el main tenga z-index mayor */}
-          {children}
-        </main>
-        <Footer />
+        <CartProvider>
+          {/* Iconos decorativos flotantes visibles en toda la aplicación */}
+          <FloatingIcons />
+          
+          <Header />
+          <main className="flex-grow z-10">{/* Asegurar que el main tenga z-index mayor */}
+            {children}
+          </main>
+          <Footer />
+          <ChatBot />
+        </CartProvider>
       </body>
     </html>
   );
