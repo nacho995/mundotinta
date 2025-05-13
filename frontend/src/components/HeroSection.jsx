@@ -26,9 +26,9 @@ const BookshelfPattern = () => (
   />
 );
 
-// Componente para el pergamino flotante con texto
+// Componente para el pergamino flotante con texto - oculto en móviles y tablets
 const FloatingScroll = ({ text, top, left, rotate }) => (
-  <div className={`absolute ${top} ${left} transform ${rotate} opacity-0 group-hover:opacity-100 transition-opacity duration-1000 delay-300 z-30 pointer-events-none`}>
+  <div className={`absolute ${top} ${left} transform ${rotate} opacity-0 group-hover:opacity-100 transition-opacity duration-1000 delay-300 z-30 pointer-events-none hidden md:block`}>
     <div className="bg-gradient-to-b from-amber-50 to-amber-100/90 px-3 py-1 rounded-lg shadow-md border border-amber-200/50 max-w-[120px]">
       <p className="text-amber-950/80 text-[10px] font-serif italic text-center">{text}</p>
     </div>
