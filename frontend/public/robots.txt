@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /login
+Disallow: /registro
+Disallow: /admin/
+Disallow: /cart/checkout
+Disallow: /reset-password
+
+# Allow AI Bots with Restrictions
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /login
+Disallow: /registro
+Disallow: /admin/
+Disallow: /cart/checkout
+Disallow: /reset-password
+
+# Sitemap location
+Sitemap: https://mundo-tinta.vercel.app/sitemap.xml

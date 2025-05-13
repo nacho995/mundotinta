@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Rocket, BookOpen, ShoppingCart, Sparkles, Stars, Clover, Trees } from 'lucide-react';
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import { useCart } from '../context/CartContext';
+import BookFormatModal from './BookFormatModal';
 
 // Definimos un tipo para las props del libro para mayor claridad (opcional, pero buena práctica)
 // interface Book {
@@ -26,6 +27,7 @@ const BookCard = ({ book }) => {
   const defaultPlaceholder = '/images/covers/default-book-cover.jpg';
   const [imgSrc, setImgSrc] = useState(book.coverImage || defaultPlaceholder);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [isFormatModalOpen, setIsFormatModalOpen] = useState(false);
   const { addToCart, cartItems } = useCart();
 
   // Observar cambios en book.coverImage por si el componente se reutiliza con diferentes props
@@ -138,15 +140,16 @@ const BookCard = ({ book }) => {
   }
 
   return (
-    <div className={`bg-stone-900 border border-amber-600/40 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-amber-500/40 hover:scale-[1.02] flex flex-col h-full w-full`}>
-      <Link href={`/books/${book._id}`} className="block group">
-        <div className="relative w-full aspect-[3/4] overflow-hidden"> 
-          {/* Cambiado a ratio fijo con aspect-[3/4] para una imagen más cuadrada */}
-          <Image 
+    <div className="group h-full flex flex-col relative bg-gradient-to-b from-stone-800 to-stone-900 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+      {/* Sección de imagen cuadrada */}
+      <Link href={`/books/${book._id || book.id}`} className="block relative">
+        <div className="relative w-full overflow-hidden bg-stone-800 aspect-square">
+          <img
             src={imgSrc}
-            alt={`Portada de ${book.title}`}
-            fill
-            style={{ objectFit: 'cover' }}
+            alt={book.title}
+            width={500}
+            height={500}
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
             className="group-hover:opacity-90 transition-opacity duration-300"
             onError={handleImageError}
           />
@@ -176,25 +179,11 @@ const BookCard = ({ book }) => {
             ${typeof book.price === 'number' ? book.price.toFixed(2) : 'N/A'}
           </p>
           
-          {/* Botón de Agregar al Carrito */}
+          {/* Botón de Agregar al Carrito - Ahora abre el modal de selección */}
           <button
             onClick={(e) => {
               e.preventDefault(); // Evitar navegación si está en un Link
-              const cartItem = {
-                id: book._id,
-                title: book.title,
-                author: book.author,
-                price: book.price,
-                coverImage: book.coverImage || defaultPlaceholder,
-                isbn: book.isbn
-              };
-              addToCart(cartItem);
-              setAddedToCart(true);
-              
-              // Mostrar mensaje de éxito por 2 segundos
-              setTimeout(() => {
-                setAddedToCart(false);
-              }, 2000);
+              setIsFormatModalOpen(true); // Abrir el modal de selección de formato
             }}
             className={`w-full flex items-center justify-center gap-2 px-3 py-1.5 ${addedToCart ? 'bg-green-600' : 'bg-stone-700 hover:bg-amber-700'} text-white font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-300 transform active:scale-[0.98] text-xs sm:text-sm mb-2`}
           >
@@ -227,12 +216,42 @@ const BookCard = ({ book }) => {
             )}
           </div>
 
-          {/* Mensaje si no hay stock o enlaces de Amazon */}
-          {(!book.amazonPhysicalUrl && !book.amazonEbookUrl && (book.stock === undefined || book.stock === 0)) && (
-            <p className="text-sm text-center text-red-400 font-semibold">No disponible</p>
-          )}
+          {/* Quitamos el mensaje de "No disponible" completamente de la interfaz */}
         </div>
       </div>
+      
+      {/* Modal de selección de formato */}
+      <BookFormatModal
+        book={book}
+        isOpen={isFormatModalOpen}
+        onClose={() => setIsFormatModalOpen(false)}
+        onSelectFormat={(format) => {
+          // Crear el objeto del item con el formato seleccionado
+          const cartItem = {
+            id: book._id || book.id, // Compatible con libros de muestra y reales
+            title: book.title,
+            author: book.author,
+            price: book.price,
+            coverImage: book.coverImage || imgSrc,
+            isbn: book.isbn,
+            format: format // 'physical' o 'ebook'
+          };
+          
+          // Añadir al carrito
+          addToCart(cartItem);
+          
+          // Cerrar el modal
+          setIsFormatModalOpen(false);
+          
+          // Mostrar mensaje de confirmación
+          setAddedToCart(true);
+          
+          // Ocultar mensaje después de 2 segundos
+          setTimeout(() => {
+            setAddedToCart(false);
+          }, 2000);
+        }}
+      />
     </div>
   );
 };

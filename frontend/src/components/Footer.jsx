@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -64,17 +65,19 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Sección del logo y descripción */}
           <div className="lg:col-span-2 pr-4">
-            <div className="flex items-center gap-3 mb-4">
-              {/* Logo con símbolo de libro */}
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-800 to-amber-950 border border-amber-700/30 flex items-center justify-center shadow-md">
-                <span className="text-amber-400 font-serif text-lg">MT</span>
-              </div>
-              
-              <h3 className="text-2xl font-serif font-bold text-amber-400 mb-4 relative inline-block">
-                <span className="absolute inset-0 bg-stone-900/90 -z-10 blur-[0.5px] rounded-sm"></span>
-                <span className="text-amber-300">M</span>undo <span className="text-amber-300">T</span>inta
-              </h3>
-            </div>
+            <Link href="/" className="group relative inline-block mb-4 hover:opacity-90 transition-opacity duration-300 py-2">
+              {/* Resplandor circular blanco difuminado SIGNIFICATIVAMENTE MÁS GRANDE */}
+              <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-full opacity-20 blur-2xl pointer-events-none"
+              ></div>
+              <Image
+                src="/images/logomundotinta.png"
+                alt="Mundo Tinta Logo Footer"
+                width={220}
+                height={55}
+                className="relative z-10 h-auto object-contain"
+              />
+            </Link>
             
             {/* Descripción de la librería */}
             <p className="text-stone-300 mb-8 relative inline-block p-2">
@@ -168,19 +171,24 @@ export default function Footer() {
             &copy; {currentYear} <span className="text-[#d4af37]">Mundo Tinta</span>. Todos los derechos reservados.
           </p>
           
-          <div className="flex space-x-6 relative px-4 py-1">
-            <Link href="/nosotros" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+          <div className="flex flex-wrap justify-center md:justify-end space-x-4 md:space-x-6 relative px-4 py-1">
+            <Link href="/politica-privacidad" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group whitespace-nowrap">
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
               Política de Privacidad
             </Link>
-            <Link href="/nosotros" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+            <Link href="/terminos-condiciones" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group whitespace-nowrap">
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
-              Términos de Uso
+              Términos y Condiciones
             </Link>
-            <Link href="/books" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+            <Link href="/aviso-legal" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group whitespace-nowrap">
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
+              Aviso Legal
+            </Link>
+            {/* Puedes mantener este o quitarlo si las páginas legales son suficientes */}
+            {/* <Link href="/books" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group whitespace-nowrap">
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
               Catálogo Completo
-            </Link>
+            </Link> */}
           </div>
         </div>
         

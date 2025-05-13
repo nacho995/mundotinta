@@ -122,12 +122,14 @@ export default function BibliotecaPage() {
           </div>
         )}
 
-        {/* Cuadrícula de libros con mejor espaciado */}
+        {/* Cuadrícula de libros con formato mejorado */}
         {!isLoading && !error && filteredBooks.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-1 mx-auto max-w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-2 mx-auto max-w-full">
             {filteredBooks.map((book) => (
-              <div key={book._id} className="w-full max-w-[320px] mx-auto">
-                <BookCard book={book} />
+              <div key={book._id} className="w-full max-w-[280px] mx-auto">
+                <div className="bg-stone-800 border border-amber-900/30 rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-[1.02] duration-300">
+                  <BookCard book={book} />
+                </div>
               </div>
             ))}
           </div>

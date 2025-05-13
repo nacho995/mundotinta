@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
@@ -75,7 +76,7 @@ export default function Header() {
       window.removeEventListener('auth-state-changed', handleAuthEvent);
       window.removeEventListener('cart-updated', handleCartUpdate);
     };
-  }, []);
+  }, [getTotalItems]);
   
   // Cambiar el estilo del encabezado al hacer scroll
   useEffect(() => {
@@ -119,18 +120,20 @@ export default function Header() {
       <div className="absolute top-0 right-1/3 w-24 h-full bg-gradient-to-b from-green-900/5 via-green-700/0 to-green-900/5 opacity-70 transform skew-x-12"></div>
       
       <nav className="container relative mx-auto px-4 flex flex-wrap justify-between items-center">
-        {/* Logo con diseño de sello de biblioteca antigua */}
-        <Link 
-          href="/" 
-          className="group relative flex items-center hover:scale-105 transition-all duration-300">
-          <div className="absolute -left-1 w-10 h-10 rounded-full bg-gradient-to-br from-amber-900 to-amber-950 border border-amber-700/30 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300 shadow-md">
-            <span className="text-amber-400 font-serif text-xs">MT</span>
-          </div>
-          <div className="ml-10 font-serif text-2xl tracking-wider">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-amber-400">Mundo</span>
-            <span className="ml-1 text-white font-light">Tinta</span>
-          </div>
-          <div className="absolute -bottom-1 left-10 right-0 h-px bg-gradient-to-r from-amber-500/60 to-transparent transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+        {/* Logo actualizado con resplandor más grande */}
+        <Link href="/" className="group relative flex items-center justify-center hover:opacity-90 transition-opacity duration-300 py-2">
+          {/* Resplandor circular blanco difuminado SIGNIFICATIVAMENTE MÁS GRANDE */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-full opacity-20 blur-2xl pointer-events-none"
+          ></div>
+          <Image
+            src="/images/logomundotinta.png"
+            alt="Mundo Tinta Logo"
+            width={200}
+            height={50}
+            priority
+            className="relative z-10 h-auto object-contain"
+          />
         </Link>
         
         {/* Botón de menú móvil */}
