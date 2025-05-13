@@ -11,7 +11,7 @@ const protect = (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
 
       // Verificar el token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'mundotinta_jwt_secret');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'mundotinta-secret-key');
 
       // Añadir el usuario decodificado a la solicitud
       req.userId = decoded.id;

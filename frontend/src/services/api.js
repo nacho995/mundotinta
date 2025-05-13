@@ -11,6 +11,22 @@ let isUsingFallbackData = false;
 // Prefijo para los enlaces de afiliado de Amazon
 const AMAZON_AFFILIATE_ID = process.env.NEXT_PUBLIC_AMAZON_AFFILIATE_ID || 'mundotinta-21';
 
+// Función para manejar la expiración del token y cerrar sesión
+const handleTokenExpired = () => {
+  if (typeof window !== 'undefined') {
+    // Limpiar localStorage
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
+    
+    // Disparar evento para actualizar componentes que dependen del estado de autenticación
+    const event = new CustomEvent('authStateChanged', { detail: { isAuthenticated: false } });
+    window.dispatchEvent(event);
+    
+    // Redirigir a la página de login
+    window.location.href = '/login';
+  }
+};
+
 // Función para obtener el token de autenticación
 const getAuthToken = () => {
   if (typeof window !== 'undefined') {
@@ -100,6 +116,14 @@ export const apiService = {
       
       if (!response.ok) {
         const errorData = await response.json();
+        
+        // Verificar si es un error de token expirado o no válido
+        if (response.status === 401) {
+          console.log('Token expirado o no válido. Cerrando sesión...');
+          handleTokenExpired();
+          throw new Error('Sesión expirada. Por favor, inicie sesión nuevamente.');
+        }
+        
         throw new Error(errorData.message || 'Error al obtener los libros del usuario');
       }
       
@@ -136,6 +160,14 @@ export const apiService = {
       
       if (!response.ok) {
         const errorData = await response.json();
+        
+        // Verificar si es un error de token expirado o no válido
+        if (response.status === 401) {
+          console.log('Token expirado o no válido. Cerrando sesión...');
+          handleTokenExpired();
+          throw new Error('Sesión expirada. Por favor, inicie sesión nuevamente.');
+        }
+        
         throw new Error(errorData.message || 'Error al obtener los libros favoritos');
       }
       
@@ -238,6 +270,14 @@ export const apiService = {
       
       if (!response.ok) {
         const errorData = await response.json();
+        
+        // Verificar si es un error de token expirado o no válido
+        if (response.status === 401) {
+          console.log('Token expirado o no válido. Cerrando sesión...');
+          handleTokenExpired();
+          throw new Error('Sesión expirada. Por favor, inicie sesión nuevamente.');
+        }
+        
         throw new Error(errorData.message || 'Error al añadir a favoritos');
       }
       
@@ -273,6 +313,14 @@ export const apiService = {
       
       if (!response.ok) {
         const errorData = await response.json();
+        
+        // Verificar si es un error de token expirado o no válido
+        if (response.status === 401) {
+          console.log('Token expirado o no válido. Cerrando sesión...');
+          handleTokenExpired();
+          throw new Error('Sesión expirada. Por favor, inicie sesión nuevamente.');
+        }
+        
         throw new Error(errorData.message || 'Error al eliminar de favoritos');
       }
       
@@ -647,6 +695,14 @@ export const apiService = {
       
       if (!response.ok) {
         const errorData = await response.json();
+        
+        // Verificar si es un error de token expirado o no válido
+        if (response.status === 401) {
+          console.log('Token expirado o no válido. Cerrando sesión...');
+          handleTokenExpired();
+          throw new Error('Sesión expirada. Por favor, inicie sesión nuevamente.');
+        }
+        
         throw new Error(errorData.message || 'Error al obtener el perfil del usuario');
       }
       

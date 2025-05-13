@@ -10,28 +10,27 @@ export default function Footer() {
     {
       title: 'Explorar',
       links: [
-        { name: 'Catálogo', href: '#libros' },
-        { name: 'Novedades', href: '#novedades' },
-        { name: 'Autores', href: '#autores' },
-        { name: 'Colecciones', href: '#colecciones' }
+        { name: 'Biblioteca', href: '/biblioteca' },
+        { name: 'Novedades', href: '/novedades' },
+        { name: 'Mi Carrito', href: '/cart' }
       ],
       color: 'amber'
     },
     {
       title: 'Géneros',
       links: [
-        { name: 'Fantasía Épica', href: '#fantasia' },
-        { name: 'Ciencia Ficción', href: '#cienciaficcion' }
+        { name: 'Géneros Literarios', href: '/generos' },
+        { name: 'Mis Favoritos', href: '/favorites' }
       ],
       color: 'green'
     },
     {
       title: 'Acerca de',
       links: [
-        { name: 'Nosotros', href: '#nosotros' },
-        { name: 'Blog', href: '#blog' },
-        { name: 'Contacto', href: '#contacto' },
-        { name: 'Ubicación', href: '#ubicacion' }
+        { name: 'Nosotros', href: '/nosotros' },
+        { name: 'Mis Libros', href: '/my-books' },
+        { name: 'Contacto', href: '/contacto' },
+        { name: 'Perfil', href: '/profile' }
       ],
       color: 'red'
     }
@@ -170,17 +169,17 @@ export default function Footer() {
           </p>
           
           <div className="flex space-x-6 relative px-4 py-1">
-            <Link href="#" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+            <Link href="/nosotros" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
               Política de Privacidad
             </Link>
-            <Link href="#" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+            <Link href="/nosotros" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
               Términos de Uso
             </Link>
-            <Link href="#" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
+            <Link href="/books" className="text-stone-300 hover:text-[#d4af37] transition-all duration-300 relative group">
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#d4af37]/40 group-hover:w-full transition-all duration-300"></span>
-              Mapa del Sitio
+              Catálogo Completo
             </Link>
           </div>
         </div>
