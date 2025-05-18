@@ -100,7 +100,7 @@ export default function Header() {
     { name: 'Contacto', href: '/contacto', color: 'amber-300' },
     { 
       name: 'Kindle', 
-      href: 'https://www.amazon.es/b/?node=1349107031&ref_=Oct_d_odnav_d_599364031_14&pd_rd_w=cqgnd&content-id=amzn1.sym.8d764ab7-d577-4bf6-be55-aaf3aeacd755&pf_rd_p=8d764ab7-d577-4bf6-be55-aaf3aeacd755&pf_rd_r=H8CMYN2M0TG9MT3M2DND&pd_rd_wg=oo1FL&pd_rd_r=2d5aafcb-c4f6-4bcc-913b-f942ed19c121', 
+      href: 'https://www.amazon.es/gp/browse.html?node=1349107031&tag=mundotinta-21', 
       color: 'amber-500',
       isExternal: true,
       isSpecial: true
