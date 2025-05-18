@@ -97,7 +97,14 @@ export default function Header() {
     { name: 'Géneros', href: '/generos', color: 'green' },
     { name: 'Novedades', href: '/novedades', color: 'red-600' },
     { name: 'Nosotros', href: '/nosotros', color: 'stone-200' },
-    { name: 'Contacto', href: '/contacto', color: 'amber-300' }
+    { name: 'Contacto', href: '/contacto', color: 'amber-300' },
+    { 
+      name: 'Kindle', 
+      href: 'https://www.amazon.es/b/?node=1349107031&ref_=Oct_d_odnav_d_599364031_14&pd_rd_w=cqgnd&content-id=amzn1.sym.8d764ab7-d577-4bf6-be55-aaf3aeacd755&pf_rd_p=8d764ab7-d577-4bf6-be55-aaf3aeacd755&pf_rd_r=H8CMYN2M0TG9MT3M2DND&pd_rd_wg=oo1FL&pd_rd_r=2d5aafcb-c4f6-4bcc-913b-f942ed19c121', 
+      color: 'amber-500',
+      isExternal: true,
+      isSpecial: true
+    }
   ];
 
   return (
@@ -150,21 +157,51 @@ export default function Header() {
         <div className={`w-full lg:w-auto ${menuOpen ? 'block' : 'hidden'} lg:block mt-4 lg:mt-0 transition-all duration-300`}>
           <ul className="flex flex-col lg:flex-row items-center space-y-3 lg:space-y-0 lg:space-x-1 xl:space-x-2">
             {navLinks.map((link, index) => (
-              <li key={index}>
-                <Link 
-                  href={link.href} 
-                  className="relative group px-4 py-2 inline-block font-serif"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {/* Fondo hover que simula esquinas de página */}
-                  <div className="absolute inset-0 border-y border-amber-700/0 group-hover:border-amber-700/30 bg-gradient-to-r from-stone-900/0 via-stone-800/0 to-stone-900/0 group-hover:via-stone-800/80 transition-all duration-300"></div>
-                  
-                  {/* Texto con color personalizado */}
-                  <span className={`relative text-stone-300 group-hover:text-${link.color} transition-colors duration-300`}>{link.name}</span>
-                  
-                  {/* Símbolo decorativo que aparece en hover */}
-                  <span className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100 -right-0 top-1/2 -translate-y-1/2 text-amber-600/60 text-xs">•</span>
-                </Link>
+              <li key={index} className="relative group">
+                {link.isExternal ? (
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${link.isSpecial ? 'flex items-center px-3 py-1.5 rounded-md bg-gradient-to-r from-amber-700/70 to-amber-900/80 text-amber-200 border border-amber-700/50 shadow-inner shadow-amber-900/20' : `text-stone-300 text-lg font-medium inline-block p-1.5 rounded-md hover:text-${link.color}-400`} transition-all duration-300 relative group`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span className="relative z-10 flex items-center">
+                      {link.name}
+                      {link.isSpecial && (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      )}
+                    </span>
+                    
+                    {/* Efecto resplandor detrás para links especiales */}
+                    {link.isSpecial && (
+                      <span className="absolute inset-0 -z-10 rounded-md bg-amber-600/30 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300"></span>
+                    )}
+                    
+                    {/* Efecto de barrido para links especiales */}
+                    {link.isSpecial && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-amber-600/0 via-amber-600/20 to-amber-600/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
+                    )}
+                    
+                    {/* Línea inferior con glow-on-hover para links normales */}
+                    {!link.isSpecial && (
+                      <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-[2px] bg-${link.color}-400 rounded-full opacity-0 group-hover:w-full group-hover:opacity-100 transition-all duration-300 group-hover:shadow-glow-${link.color}`}></span>
+                    )}
+                  </a>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className={`text-stone-300 text-lg font-medium inline-block p-1.5 rounded-md hover:text-${link.color}-400 transition-all duration-300 relative`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span className="relative z-10">{link.name}</span>
+                    
+                    {/* Línea inferior con glow-on-hover */}
+                    <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-[2px] bg-${link.color}-400 rounded-full opacity-0 group-hover:w-full group-hover:opacity-100 transition-all duration-300 group-hover:shadow-glow-${link.color}`}></span>
+                  </Link>
+                )}
               </li>
             ))}
             

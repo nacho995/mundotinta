@@ -171,11 +171,9 @@ export default function HeroSection() {
             <h1 className="relative text-5xl md:text-6xl font-bold mb-10 leading-tight font-serif">
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#d2b48c] via-[#e6c9ab] to-[#d3a87d] py-2 group-hover/texto:from-[#e6c9ab] group-hover/texto:via-[#f2e0ca] group-hover/texto:to-[#e3b68d] group-hover/texto:drop-shadow-[0_0_8px_rgba(210,180,140,0.3)] transition-all duration-700">
                 {titleText1}
-                <span className="animate-blink ml-0.5 text-[#e3b68d]">|</span>
               </span>
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#d3a87d] via-[#e6c9ab]/90 to-[#c19a6b] py-2 group-hover/texto:from-[#e6c9ab] group-hover/texto:via-[#f2e0ca] group-hover/texto:to-[#c19a6b] group-hover/texto:drop-shadow-[0_0_8px_rgba(210,180,140,0.3)] transition-all duration-700">
                 {titleText2}
-                {!titleText2.includes(fullText2) && <span className="animate-blink ml-0.5 text-[#e3b68d]">|</span>}
               </span>
               
               {/* Línea decorativa estilo pergamino - INTENSIFICADA */}
