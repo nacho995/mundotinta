@@ -562,46 +562,99 @@ function detectExcludedTitles(query) {
 // Verificar que Ollama está instalado y disponible
 exports.checkOllamaStatus = async (req, res) => {
   try {
-    const ollamaProcess = spawn('ollama', ['list'], {
-      stdio: ['ignore', 'pipe', 'pipe']
+    // Primero comprobar si el comando ollama existe en el sistema
+    const checkProcess = spawn('which', ['ollama']);
+    
+    checkProcess.on('error', () => {
+      // El comando 'which' no se pudo ejecutar por alguna razón
+      return res.status(200).json({
+        status: 'error',
+        message: 'No se puede verificar si Ollama está instalado',
+        needsSetup: true,
+        ollamaInstalled: false,
+        fallbackMode: true
+      });
     });
     
-    let outputData = '';
-    let errorData = '';
-    
-    ollamaProcess.stdout.on('data', (data) => {
-      outputData += data.toString();
-    });
-    
-    ollamaProcess.stderr.on('data', (data) => {
-      errorData += data.toString();
-    });
-    
-    ollamaProcess.on('close', (code) => {
-      if (code !== 0) {
-        return res.status(503).json({
-          status: 'error',
-          message: 'Ollama no está instalado o no está funcionando correctamente',
-          needsSetup: true,
-          errorDetails: errorData
+    checkProcess.on('close', (checkCode) => {
+      if (checkCode !== 0) {
+        // Ollama no está instalado - enviar respuesta exitosa pero indicando modo fallback
+        return res.status(200).json({
+          status: 'ok',
+          message: 'Ollama no está instalado, utilizando modo fallback',
+          needsSetup: false,
+          ollamaInstalled: false,
+          fallbackMode: true
         });
       }
       
-      // Verificar si el modelo necesario está disponible
-      const hasRequiredModel = outputData.toLowerCase().includes('mistral');
-      
-      res.json({
-        status: 'ok',
-        hasRequiredModel,
-        availableModels: outputData.trim().split('\n'),
-        setupRequired: !hasRequiredModel
-      });
+      // Ollama está instalado, verificar estado
+      try {
+        const ollamaProcess = spawn('ollama', ['list'], {
+          stdio: ['ignore', 'pipe', 'pipe']
+        });
+        
+        let outputData = '';
+        let errorData = '';
+        
+        ollamaProcess.stdout.on('data', (data) => {
+          outputData += data.toString();
+        });
+        
+        ollamaProcess.stderr.on('data', (data) => {
+          errorData += data.toString();
+        });
+        
+        ollamaProcess.on('error', () => {
+          // Error al ejecutar ollama list
+          return res.status(200).json({
+            status: 'ok',
+            message: 'Ollama no puede ejecutarse, utilizando modo fallback',
+            needsSetup: false,
+            ollamaInstalled: true, // Está instalado pero hay un problema
+            fallbackMode: true
+          });
+        });
+        
+        ollamaProcess.on('close', (code) => {
+          if (code !== 0) {
+            return res.status(200).json({
+              status: 'ok',
+              message: 'Ollama está instalado pero no funciona correctamente',
+              needsSetup: false,
+              ollamaInstalled: true,
+              fallbackMode: true,
+              errorDetails: errorData
+            });
+          }
+          
+          // Verificar si el modelo necesario está disponible
+          const hasRequiredModel = outputData.toLowerCase().includes('mistral');
+          
+          res.json({
+            status: 'ok',
+            ollamaInstalled: true,
+            hasRequiredModel,
+            availableModels: outputData.trim().split('\n'),
+            setupRequired: !hasRequiredModel,
+            fallbackMode: false
+          });
+        });
+      } catch (innerError) {
+        res.status(200).json({
+          status: 'ok',
+          message: 'Error al ejecutar ollama list, utilizando modo fallback',
+          error: innerError.message,
+          fallbackMode: true
+        });
+      }
     });
   } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: 'Error al verificar Ollama',
-      error: error.message
+    res.status(200).json({
+      status: 'ok',
+      message: 'Error al verificar Ollama, utilizando modo fallback',
+      error: error.message,
+      fallbackMode: true
     });
   }
 };

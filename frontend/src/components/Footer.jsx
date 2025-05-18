@@ -66,9 +66,9 @@ export default function Footer() {
           {/* Sección del logo y descripción */}
           <div className="lg:col-span-2 pr-4">
             <Link href="/" className="group relative inline-block mb-4 hover:opacity-90 transition-opacity duration-300 py-2">
-              {/* Resplandor circular blanco difuminado SIGNIFICATIVAMENTE MÁS GRANDE */}
+              {/* Resplandor circular blanco difuminado con animación sutil */}
               <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-full opacity-20 blur-2xl pointer-events-none"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 bg-white rounded-full opacity-40 blur-2xl pointer-events-none animate-pulse-slow"
               ></div>
               <Image
                 src="/images/logomundotinta.png"

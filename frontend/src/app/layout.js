@@ -18,6 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.mundo-tinta.com',
+  // Eliminando configuración de icons que podría estar causando conflictos
+
   title: {
     template: '%s | Mundo Tinta - Fantasía y Ciencia Ficción',
     default: 'Mundo Tinta - Librería Online Especializada en Fantasía y Ciencia Ficción'
@@ -99,6 +101,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
+        {/* Favicon directo con link rel */}
+        <link rel="icon" href="/images/mundo-tinta-og.jpg" />
+        <link rel="shortcut icon" href="/images/mundo-tinta-og.jpg" />
+        <link rel="apple-touch-icon" href="/images/mundo-tinta-og.jpg" />
         {/* Script de Schema.org para Rich Snippets */}
         <script type="application/ld+json">
           {JSON.stringify({

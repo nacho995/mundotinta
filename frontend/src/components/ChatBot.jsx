@@ -49,18 +49,27 @@ const ChatBot = () => {
     async function checkApiStatus() {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
-        const response = await fetch(`${backendUrl}/api/chat/status`);
-
-        if (response.ok) {
+        
+        // Agregar timeout para evitar que la solicitud se quede esperando indefinidamente
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos de timeout
+        
+        const response = await fetch(`${backendUrl}/api/chat/status`, {
+          signal: controller.signal
+        }).catch(() => null); // Capturar error de fetch directamente
+        
+        clearTimeout(timeoutId);
+        
+        if (response && response.ok) {
           const data = await response.json();
           setApiStatus(data);
-          setIsInitialized(true);
         } else {
           console.warn('El backend de IA no está disponible');
-          setIsInitialized(true);
         }
       } catch (error) {
         console.error('Error al verificar el estado de la API:', error);
+      } finally {
+        // Siempre inicializar el componente, incluso si hay error
         setIsInitialized(true);
       }
     }
