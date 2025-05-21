@@ -47,13 +47,17 @@ const bookSchema = new mongoose.Schema({
     min: [0, 'El stock no puede ser negativo.'],
     default: 0,
   },
-  amazonPhysicalUrl: { // Nueva URL para versión física
+  shopifyProductId: { // ID del producto en Shopify
     type: String,
     trim: true,
   },
-  amazonEbookUrl: { // Nueva URL para versión ebook
-    type: String,
-    trim: true,
+  formats: { // Formatos disponibles y sus variantes en Shopify
+    type: [{
+      type: { type: String, enum: ['physical', 'ebook', 'audiobook'] },
+      variantId: String, // ID de la variante en Shopify
+      price: Number
+    }],
+    default: []
   },
   createdAt: {
     type: Date,

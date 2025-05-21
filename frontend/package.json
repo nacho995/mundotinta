@@ -10,12 +10,15 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@shopify/storefront-api-client": "^1.0.7",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.8.1",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.408.0",
     "next": "15.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "shopify-buy": "^3.0.4",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {

@@ -163,7 +163,7 @@ export default function AboutSection() {
       <div className="absolute inset-0 bg-gradient-to-br from-stone-950 via-[#3b2a1f] to-[#5e4534]/90 z-0"></div>
       
       {/* Capas de fondo para profundidad */}
-      <div className="absolute inset-0 bg-[url('/images/leather-texture.jpg')] bg-cover opacity-10 mix-blend-overlay z-0"></div>
+      <div className="absolute inset-0 bg-[url('/images/paper-texture.jpg')] bg-cover opacity-10 mix-blend-overlay z-0"></div>
       
       {/* Patrón decorativo de estantería de libros */}
       <div className="absolute inset-0 z-0 opacity-5" 
@@ -271,7 +271,7 @@ export default function AboutSection() {
               <div className="relative rounded-lg overflow-hidden backdrop-blur-sm">
                 {/* Fondo estilo pergamino */}
                 <div className="absolute inset-0 bg-gradient-to-b from-amber-950/50 to-stone-900/50 z-0"></div>
-                <div className="absolute inset-0 bg-[url('/images/parchment-texture.jpg')] bg-cover opacity-10 mix-blend-overlay z-0"></div>
+                <div className="absolute inset-0 bg-[url('/images/paper-texture.jpg')] bg-cover opacity-10 mix-blend-overlay z-0"></div>
                 
                 {/* Borde interior con estilo de manuscrito */}
                 <div className="relative border border-amber-800/30 p-8 md:p-10 rounded-sm z-10 shadow-inner shadow-amber-950/50">

@@ -3,15 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      'm.media-amazon.com',
-      'images-na.ssl-images-amazon.com',
-      'i.gr-assets.com',
-      'covers.openlibrary.org',
-      'images-eu.ssl-images-amazon.com',
-      'upload.wikimedia.org',
-      'media.amazonwebservices.com',
-      'cdn.pixabay.com',
-      'libros.hipercor.es'
+      'cdn.shopify.com',
+      'k2y7fj-cj.myshopify.com'
     ],
   },
   async rewrites() {

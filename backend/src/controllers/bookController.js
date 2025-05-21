@@ -11,8 +11,11 @@ const sampleBooks = [
     coverImage: '/images/covers/el-nombre-del-viento.jpg',
     genre: 'Fantasía',
     stock: 10,
-    amazonPhysicalUrl: 'https://www.amazon.com/dp/0756404746?tag=YOUR_AFFILIATE_TAG-20',
-    amazonEbookUrl: 'https://www.amazon.com/dp/B002641W3S?tag=YOUR_AFFILIATE_TAG-20',
+    shopifyProductId: 'gid://shopify/Product/12345',
+    formats: [
+      { type: 'physical', variantId: 'gid://shopify/ProductVariant/11111', price: 19.99 },
+      { type: 'ebook', variantId: 'gid://shopify/ProductVariant/22222', price: 14.99 }
+    ]
   },
   {
     _id: '2',
@@ -23,7 +26,10 @@ const sampleBooks = [
     coverImage: '/images/covers/cien-anos-de-soledad.jpg',
     genre: 'Realismo Mágico',
     stock: 5,
-    amazonPhysicalUrl: 'https://www.amazon.com/dp/0060883286?tag=YOUR_AFFILIATE_TAG-20',
+    shopifyProductId: 'gid://shopify/Product/23456',
+    formats: [
+      { type: 'physical', variantId: 'gid://shopify/ProductVariant/33333', price: 15.50 }
+    ]
   },
   {
     _id: '3',
@@ -34,8 +40,11 @@ const sampleBooks = [
     coverImage: '/images/covers/dune.jpg',
     genre: 'Ciencia Ficción',
     stock: 12,
-    amazonPhysicalUrl: 'https://www.amazon.com/dp/0441172717?tag=YOUR_AFFILIATE_TAG-20',
-    amazonEbookUrl: 'https://www.amazon.com/dp/B00B7NPRY8?tag=YOUR_AFFILIATE_TAG-20',
+    shopifyProductId: 'gid://shopify/Product/34567',
+    formats: [
+      { type: 'physical', variantId: 'gid://shopify/ProductVariant/44444', price: 22.00 },
+      { type: 'ebook', variantId: 'gid://shopify/ProductVariant/55555', price: 17.99 }
+    ]
   },
   {
     _id: '4',
@@ -46,7 +55,10 @@ const sampleBooks = [
     coverImage: '/images/covers/1984.jpg',
     genre: 'Distopía',
     stock: 8,
-    amazonEbookUrl: 'https://www.amazon.com/dp/B003JTHWPE?tag=YOUR_AFFILIATE_TAG-20',
+    shopifyProductId: 'gid://shopify/Product/45678',
+    formats: [
+      { type: 'ebook', variantId: 'gid://shopify/ProductVariant/66666', price: 12.75 }
+    ]
   },
 ];
 

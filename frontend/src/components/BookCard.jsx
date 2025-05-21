@@ -24,29 +24,81 @@ import BookFormatModal from './BookFormatModal';
 // }
 
 const BookCard = ({ book }) => {
-  const defaultPlaceholder = '/images/covers/default-book-cover.jpg';
-  const [imgSrc, setImgSrc] = useState(book.coverImage || defaultPlaceholder);
+  // Portadas predeterminadas específicas por género (con URL absolutas para mayor fiabilidad)
+  const getDefaultCover = (genre) => {
+    // Comprobamos si es una ruta local relativa (/images/...) y la convertimos a absoluta
+    const localPrefix = typeof window !== 'undefined' ? window.location.origin : '';
+    
+    if (genre === 'Ciencia Ficción') {
+      return `${localPrefix}/images/covers/default-scifi-cover.jpg`;
+    } else if (genre === 'Fantasía') {
+      return `${localPrefix}/images/covers/default-fantasy-cover.jpg`;
+    } else {
+      // Portada genérica por defecto si no coincide con ningún género específico
+      return `${localPrefix}/images/covers/default-book-cover.jpg`;
+    }
+  };
+
+  // Verificar si una URL de imagen es válida
+  const isValidImageUrl = (url) => {
+    if (!url) return false;
+    // Aceptar cualquier URL que parezca ser una imagen
+    return (
+      url.startsWith('http') || 
+      url.includes('/images/')
+    );
+  };
+
+  // Obtener la portada predeterminada según el género como fallback
+  const defaultCover = getDefaultCover(book.genre);
+  
+  // Forzar el uso de la imagen original de la API si existe
+  // Si book.coverImage es cualquier URL, la usamos directamente
+  const initialImageSrc = book.coverImage || defaultCover;
+  
+  const [imgSrc, setImgSrc] = useState(initialImageSrc);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [isFormatModalOpen, setIsFormatModalOpen] = useState(false);
+  const [isDefaultCover, setIsDefaultCover] = useState(!book.coverImage);
   const { addToCart, cartItems } = useCart();
 
   // Observar cambios en book.coverImage por si el componente se reutiliza con diferentes props
   useEffect(() => {
-    setImgSrc(book.coverImage || defaultPlaceholder);
-  }, [book.coverImage, defaultPlaceholder]);
+    // Siempre usamos la imagen original de la API si existe
+    const newImageSrc = book.coverImage || defaultCover;
+    setImgSrc(newImageSrc);
+    setIsDefaultCover(!book.coverImage);
+    // Si cambian los props, reiniciamos el estado de carga
+    setImgLoaded(false);
+    
+    console.log('Usando imagen:', book.coverImage ? 'Original de la API' : 'Portada predeterminada');
+  }, [book.coverImage, book.genre, defaultCover]);
   
   // Verificar si el libro ya está en el carrito
   useEffect(() => {
-    const isInCart = cartItems.some(item => item.id === book._id);
+    const isInCart = cartItems.some(item => 
+      (item.id === book._id) || (item.id === book.id) || (book._id && item.id === book._id) || (book.id && item.id === book.id)
+    );
     setAddedToCart(isInCart);
-  }, [cartItems, book._id]);
+  }, [cartItems, book._id, book.id]);
 
   const handleImageError = () => {
-    // Solo intentar cargar el placeholder si no es ya la imagen que está fallando
-    if (imgSrc !== defaultPlaceholder) {
-      setImgSrc(defaultPlaceholder);
+    // Si la imagen original falla, cargar la portada por defecto según el género
+    if (imgSrc !== defaultCover) {
+      console.log(`Imagen no disponible para: ${book.title}. Usando portada predeterminada de ${book.genre}`);
+      // Retardo mínimo para evitar loops infinitos
+      setTimeout(() => {
+        setImgSrc(defaultCover);
+        setIsDefaultCover(true);
+        // Forzar la carga de la imagen
+        setImgLoaded(true);
+      }, 50);
+    } else {
+      // Si la portada predeterminada también falla, asegurarse de que la UI esté visible
+      setImgLoaded(true);
+      console.error(`Error al cargar la portada predeterminada para: ${book.title}`);
     }
-    // Si el defaultPlaceholder también falla, ya no hacemos nada para evitar bucles.
   };
 
   let genreTagElement = null;
@@ -142,23 +194,60 @@ const BookCard = ({ book }) => {
   return (
     <div className="group h-full flex flex-col relative bg-gradient-to-b from-stone-800 to-stone-900 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
       {/* Sección de imagen cuadrada */}
-      <Link href={`/books/${book._id || book.id}`} className="block relative">
-        <div className="relative w-full overflow-hidden bg-stone-800 aspect-square">
-          <img
-            src={imgSrc}
-            alt={book.title}
-            width={500}
-            height={500}
-            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-            className="group-hover:opacity-90 transition-opacity duration-300"
-            onError={handleImageError}
-          />
+      <Link href={`/books/${book._id || book.id}`} className="block relative" prefetch={true}>
+        <div className="relative w-full overflow-hidden bg-stone-800 aspect-[3/4]">
+          <div className="relative w-full h-full flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:saturate-110 group-hover:brightness-110">
+            {/* Estado de carga de imagen */}
+            {!imgLoaded && (
+              <div className="absolute inset-0 bg-stone-800 flex items-center justify-center p-4">
+                <div className="w-12 h-16 bg-stone-700 rounded-r relative overflow-hidden flex items-center justify-center animate-pulse">
+                  <div className="w-10 h-14 absolute bg-stone-200 animate-pulse"></div>
+                </div>
+              </div>
+            )}
+
+            {/* Imagen de portada */}
+            <Image
+              src={imgSrc}
+              alt={`Portada de ${book.title}`}
+              width={500}
+              height={750}
+              className={`object-contain max-h-full max-w-full transition-all duration-700 ${imgLoaded ? 'opacity-100' : 'opacity-0'} ${isDefaultCover ? 'group-hover:scale-105' : ''}`}
+              onLoad={() => {
+                console.log(`Imagen cargada con éxito: ${imgSrc}`);
+                setImgLoaded(true);
+              }}
+              onError={(e) => {
+                console.error(`Error al cargar imagen ${imgSrc} para ${book.title}:`, e);
+                handleImageError();
+              }}
+              unoptimized={true} // Usar unoptimized para todas las imágenes para mayor compatibilidad
+              quality={90}
+              loading="eager"
+              priority={true}
+            />
+            
+            {/* Overlay con efecto de portada predeterminada */}
+            {isDefaultCover && imgLoaded && (
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent z-10 pointer-events-none"></div>
+            )}
+            
+            {/* Indicador de portada predeterminada (sutil) */}
+            {isDefaultCover && imgLoaded && (
+              <div className="absolute bottom-0 left-0 right-0 py-1 bg-gradient-to-t from-stone-900/90 to-transparent text-center text-xs text-amber-300/70 pointer-events-none z-10">
+                Portada ilustrativa
+              </div>
+            )}
+          
+            {/* Efecto sutil de brillo en bordes para mejorar la apariencia visual */}
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/10 via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
         </div>
       </Link>
 
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-lg md:text-xl font-serif font-semibold text-amber-300 mb-1.5 group-hover:text-amber-200 transition-colors duration-300 line-clamp-2">
-          <Link href={`/books/${book._id}`} className="hover:underline">
+          <Link href={`/books/${book._id || book.id}`} className="hover:underline" prefetch={true}>
             {book.title}
           </Link>
         </h3>
@@ -167,7 +256,7 @@ const BookCard = ({ book }) => {
         {genreTagElement}
         
         <Link 
-          href={`/books/${book._id}`}
+          href={`/books/${book._id || book.id}`}
           className="my-2 block text-center px-3 py-1.5 bg-gradient-to-r from-[#A0522D] to-[#8B4513] hover:from-[#8B4513] hover:to-[#A0522D] text-amber-100 font-semibold rounded-md shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center gap-1.5"
         >
           <BookOpen className="w-4 h-4" />
@@ -191,28 +280,24 @@ const BookCard = ({ book }) => {
             {addedToCart ? 'Añadido ✓' : 'Añadir al Carrito'}
           </button>
           
-          {/* Botones de compra de Amazon */}
+          {/* Información adicional del libro */}
           <div className="flex flex-col gap-2">
-            {book.amazonPhysicalUrl && (
-              <a 
-                href={book.amazonPhysicalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block text-center px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-stone-900 font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-300 transform active:scale-[0.98] text-xs sm:text-sm"
-              >
-                Comprar Físico
-              </a>
+            {book.publisher && (
+              <p className="text-xs text-stone-300 text-center">
+                <span className="text-amber-400">Editorial:</span> {book.publisher}
+              </p>
             )}
-
-            {book.amazonEbookUrl && (
-              <a 
-                href={book.amazonEbookUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block text-center px-3 py-1.5 border border-amber-500 hover:bg-amber-500 hover:text-stone-900 text-amber-300 font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-300 transform active:scale-[0.98] text-xs sm:text-sm"
-              >
-                Comprar Ebook
-              </a>
+            
+            {book.publishedDate && (
+              <p className="text-xs text-stone-300 text-center">
+                <span className="text-amber-400">Fecha publicación:</span> {book.publishedDate.substring(0, 4)}
+              </p>
+            )}
+            
+            {book.pageCount > 0 && (
+              <p className="text-xs text-stone-300 text-center">
+                <span className="text-amber-400">Páginas:</span> {book.pageCount}
+              </p>
             )}
           </div>
 
@@ -232,7 +317,8 @@ const BookCard = ({ book }) => {
             title: book.title,
             author: book.author,
             price: book.price,
-            coverImage: book.coverImage || imgSrc,
+            coverImage: imgSrc,
+            isDefaultCover: isDefaultCover,
             isbn: book.isbn,
             format: format // 'physical' o 'ebook'
           };

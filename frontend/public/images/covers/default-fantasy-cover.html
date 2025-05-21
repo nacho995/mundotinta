@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portada Fantasía</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Georgia', serif;
+    }
+    .book-cover {
+      width: 600px;
+      height: 900px;
+      position: relative;
+      background: linear-gradient(145deg, #301D12 0%, #483122 50%, #352316 100%);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+    .texture {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVGhD7ZkxDoMwDEVzIHpIbkIXOEAP0LUDZ+jYiQ2xsbFUBCQQKUuSXoiW/CmgfPTXgjgQKaWEfcLM+a7nnZt0MqCihhw3+JZNOjcGbGx84K9BdkWxWu7wPZtwliLgFZn4W23VnEHgLMcotCGLoJFVYqwZ69KWSWNQ2tKg0WhL42CgrYuPy84s1Zaf+L+0GjnRBt8PsrExQcpEFpWGX9/GrH9v/x0kDvJtkMbMwRo5iR2k9t5/iDNBai3XqNHwGR1k1hyrJmtENrK7JmtENrI0ZaOvJmtEnZ+DbJB1v3sLH7lshhLyCToYFSAJ+1foAAAAAElFTkSuQmCC');
+      opacity: 0.05;
+      mix-blend-mode: overlay;
+    }
+    .border {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 2px solid rgba(222, 184, 135, 0.3);
+    }
+    .inner-border {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      border: 1px solid rgba(222, 184, 135, 0.2);
+    }
+    .title-box {
+      position: absolute;
+      top: 60px;
+      left: 40px;
+      right: 40px;
+      text-align: center;
+    }
+    .title {
+      font-size: 40px;
+      color: #B8860B;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      font-weight: bold;
+    }
+    .subtitle {
+      font-size: 24px;
+      color: #DEB887;
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+    .symbol {
+      font-size: 32px;
+      color: rgba(222, 184, 135, 0.5);
+      margin: 15px 0;
+    }
+    .image-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+    }
+    .fantasy-symbol {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .fantasy-symbol svg {
+      width: 80%;
+      height: 80%;
+      opacity: 0.7;
+      filter: drop-shadow(0 0 5px rgba(222, 184, 135, 0.5));
+    }
+    .author-box {
+      position: absolute;
+      bottom: 80px;
+      left: 40px;
+      right: 40px;
+      text-align: center;
+    }
+    .author {
+      font-size: 24px;
+      color: #DEB887;
+      font-style: italic;
+    }
+    .footer {
+      position: absolute;
+      bottom: 30px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 16px;
+      color: rgba(222, 184, 135, 0.5);
+    }
+    .glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(222, 184, 135, 0.1) 0%, rgba(222, 184, 135, 0) 70%);
+      border-radius: 50%;
+      opacity: 0.5;
+      filter: blur(15px);
+    }
+    .corner-ornament {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      opacity: 0.3;
+    }
+    .corner-top-left {
+      top: 20px;
+      left: 20px;
+      transform: rotate(0deg);
+    }
+    .corner-top-right {
+      top: 20px;
+      right: 20px;
+      transform: rotate(90deg);
+    }
+    .corner-bottom-left {
+      bottom: 20px;
+      left: 20px;
+      transform: rotate(270deg);
+    }
+    .corner-bottom-right {
+      bottom: 20px;
+      right: 20px;
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="book-cover">
+    <div class="texture"></div>
+    <div class="border"></div>
+    <div class="inner-border"></div>
+    <div class="glow"></div>
+    
+    <div class="corner-ornament corner-top-left">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4L12 12M12 12L20 20M12 12L20 4M12 12L4 20" stroke="#DEB887" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="corner-ornament corner-top-right">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4L12 12M12 12L20 20M12 12L20 4M12 12L4 20" stroke="#DEB887" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="corner-ornament corner-bottom-left">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4L12 12M12 12L20 20M12 12L20 4M12 12L4 20" stroke="#DEB887" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="corner-ornament corner-bottom-right">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4L12 12M12 12L20 20M12 12L20 4M12 12L4 20" stroke="#DEB887" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    
+    <div class="title-box">
+      <div class="title">MUNDO FANTASÍA</div>
+      <div class="subtitle">Un libro de fantasía épica</div>
+      <div class="symbol">✧ ✦ ✧</div>
+    </div>
+    
+    <div class="image-container">
+      <div class="fantasy-symbol">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 4h-3V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v1H3a1 1 0 0 0-1 1v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a1 1 0 0 0-1-1zM7 4.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1zM19 19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6h2.5v.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V6H19v13z" fill="#DEB887"/>
+          <path d="M8 10h8v2H8zM8 14h8v2H8z" fill="#DEB887"/>
+        </svg>
+      </div>
+    </div>
+    
+    <div class="author-box">
+      <div class="author">Mundo Tinta</div>
+    </div>
+    
+    <div class="footer">
+      MUNDOTINTA BIBLIOTECA
+    </div>
+  </div>
+  
+  <script>
+    // Para capturar la imagen y guardarla, puedes usar html2canvas
+    // Este código es solo de referencia
+    document.addEventListener('DOMContentLoaded', function() {
+      // Para cuando quieras capturar la imagen
+      console.log('Página cargada, lista para convertir a imagen');
+    });
+  </script>
+</body>
+</html>

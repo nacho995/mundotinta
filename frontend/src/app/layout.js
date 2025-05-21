@@ -162,9 +162,9 @@ export default function RootLayout({ children }) {
           <Footer />
           <ChatBot />
           
-          {/* Amazon Afiliados disclaimer - Requerido por Amazon */}
+          {/* Shopify disclaimer */}
           <div className="text-xs text-center py-2 bg-gray-100 dark:bg-gray-800 w-full">
-            <p>Mundo Tinta participa en el Programa de Afiliados de Amazon EU, un programa de publicidad para afiliados diseñado para ofrecer a sitios web un modo de obtener comisiones por publicidad, publicitando e incluyendo enlaces a Amazon.es</p>
+            <p>Mundo Tinta utiliza Shopify como plataforma de comercio electrónico. La plataforma garantiza transacciones seguras y protección de datos personales.</p>
           </div>
         </CartProvider>
       </body>

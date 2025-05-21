@@ -1,0 +1,13 @@
+# Variables de entorno para Shopify
+NEXT_PUBLIC_SHOPIFY_DOMAIN=mundo-tint.myshopify.dev
+NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN=201f953a3269193dfa2519367b43b092
+
+# Token privado (SOLO para uso en servidor)
+# IMPORTANTE: Este token NUNCA debe estar en código del lado del cliente
+SHOPIFY_PRIVATE_STOREFRONT_TOKEN=shpat_ad79...
+
+# Variables de entorno para la API backend
+NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
+
+# URL base del sitio para metadatos (opcional)
+NEXT_PUBLIC_SITE_URL=https://www.mundo-tinta.com

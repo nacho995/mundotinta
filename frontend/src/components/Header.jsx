@@ -13,7 +13,7 @@ export default function Header() {
   const [userName, setUserName] = useState('');
   const [cartCount, setCartCount] = useState(0);
   const router = useRouter();
-  const { getTotalItems } = useCart();
+  const { cartItems, getTotalItems } = useCart();
   
   // Verificar si el usuario está logueado al cargar la página y cada vez que el componente reciba foco
   useEffect(() => {
@@ -34,7 +34,9 @@ export default function Header() {
     
     // Actualizar contador del carrito
     const updateCartCount = () => {
-      setCartCount(getTotalItems());
+      if (getTotalItems) {
+        setCartCount(getTotalItems());
+      }
     };
     
     // Verificar inmediatamente
@@ -77,6 +79,13 @@ export default function Header() {
       window.removeEventListener('cart-updated', handleCartUpdate);
     };
   }, [getTotalItems]);
+
+  // También actualizar el contador cuando cambie cartItems
+  useEffect(() => {
+    if (getTotalItems) {
+      setCartCount(getTotalItems());
+    }
+  }, [cartItems, getTotalItems]);
   
   // Cambiar el estilo del encabezado al hacer scroll
   useEffect(() => {
@@ -91,20 +100,13 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  // Enlaces de navegación
+  // Enlaces de navegación - todos usando el mismo color para hover
   const navLinks = [
     { name: 'Biblioteca', href: '/biblioteca', color: 'amber' },
-    { name: 'Géneros', href: '/generos', color: 'green' },
-    { name: 'Novedades', href: '/novedades', color: 'red-600' },
-    { name: 'Nosotros', href: '/nosotros', color: 'stone-200' },
-    { name: 'Contacto', href: '/contacto', color: 'amber-300' },
-    { 
-      name: 'Kindle', 
-      href: 'https://www.amazon.es/gp/browse.html?node=1349107031&tag=mundotinta-21', 
-      color: 'amber-500',
-      isExternal: true,
-      isSpecial: true
-    }
+    { name: 'Géneros', href: '/generos', color: 'amber' },
+    { name: 'Novedades', href: '/novedades', color: 'amber' },
+    { name: 'Nosotros', href: '/nosotros', color: 'amber' },
+    { name: 'Contacto', href: '/contacto', color: 'amber' }
   ];
 
   return (
@@ -139,7 +141,8 @@ export default function Header() {
             width={200}
             height={50}
             priority
-            className="relative z-10 h-auto object-contain"
+            className="relative z-10 object-contain"
+            style={{ width: 'auto', height: '100px' }}
           />
         </Link>
         
@@ -163,7 +166,7 @@ export default function Header() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`${link.isSpecial ? 'flex items-center px-3 py-1.5 rounded-md bg-gradient-to-r from-amber-700/70 to-amber-900/80 text-amber-200 border border-amber-700/50 shadow-inner shadow-amber-900/20' : `text-stone-300 text-lg font-medium inline-block p-1.5 rounded-md hover:text-${link.color}-400`} transition-all duration-300 relative group`}
+                    className={`${link.isSpecial ? 'flex items-center px-3 py-1.5 rounded-md bg-gradient-to-r from-amber-700/70 to-amber-900/80 text-amber-200 border border-amber-700/50 shadow-inner shadow-amber-900/20' : `text-stone-300 text-lg font-medium inline-block p-1.5 rounded-md hover:text-amber-400`} transition-all duration-300 relative group`}
                     onClick={() => setMenuOpen(false)}
                   >
                     <span className="relative z-10 flex items-center">
@@ -187,19 +190,19 @@ export default function Header() {
                     
                     {/* Línea inferior con glow-on-hover para links normales */}
                     {!link.isSpecial && (
-                      <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-[2px] bg-${link.color}-400 rounded-full opacity-0 group-hover:w-full group-hover:opacity-100 transition-all duration-300 group-hover:shadow-glow-${link.color}`}></span>
+                      <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-[2px] bg-amber-400 rounded-full opacity-0 group-hover:w-full group-hover:opacity-100 transition-all duration-300 group-hover:shadow-glow-amber"></span>
                     )}
                   </a>
                 ) : (
                   <Link
                     href={link.href}
-                    className={`text-stone-300 text-lg font-medium inline-block p-1.5 rounded-md hover:text-${link.color}-400 transition-all duration-300 relative`}
+                    className="text-stone-300 text-lg font-medium inline-block p-1.5 rounded-md hover:text-amber-400 transition-all duration-300 relative group"
                     onClick={() => setMenuOpen(false)}
                   >
                     <span className="relative z-10">{link.name}</span>
                     
-                    {/* Línea inferior con glow-on-hover */}
-                    <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-[2px] bg-${link.color}-400 rounded-full opacity-0 group-hover:w-full group-hover:opacity-100 transition-all duration-300 group-hover:shadow-glow-${link.color}`}></span>
+                    {/* Línea inferior con glow-on-hover - todos con color amber */}
+                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-[2px] bg-amber-400 rounded-full opacity-0 group-hover:w-full group-hover:opacity-100 transition-all duration-300 group-hover:shadow-glow-amber"></span>
                   </Link>
                 )}
               </li>

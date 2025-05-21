@@ -21,15 +21,15 @@ export default function AvisoLegalPage() {
           Queda prohibida la reproducción, distribución, comunicación pública, transformación o cualquier otra actividad que se pueda realizar con los contenidos de esta página web, ni aun citando las fuentes, salvo consentimiento previo, expreso y por escrito de Mundo Tinta.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">Enlaces de Afiliados</h2>
+        <h2 className="text-2xl font-semibold mt-6 mb-3">Tienda Online</h2>
         <p>
-          Este sitio web participa en el Programa de Afiliados de Amazon EU, un programa de publicidad para afiliados diseñado para ofrecer a sitios web un modo de obtener comisiones por publicidad, publicitando e incluyendo enlaces a Amazon.es y sitios web afiliados.
+          Este sitio web utiliza Shopify como plataforma de comercio electrónico. Shopify proporciona la infraestructura tecnológica necesaria para gestionar nuestra tienda online y los procesos de compra.
         </p>
         <p>
-          En calidad de Afiliado de Amazon, Mundo Tinta obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables. La inclusión de estos enlaces no influye en la información proporcionada en este sitio web, y las recomendaciones u opiniones se basan en la experiencia y/o criterio del equipo de Mundo Tinta.
+          La información relacionada con el procesamiento de pagos es gestionada directamente por Shopify, ofreciendo un entorno seguro y cumpliendo con los estándares de seguridad requeridos para el comercio electrónico.
         </p>
         <p>
-          La decisión de comprar cualquier producto o servicio a través de estos enlaces es exclusivamente tuya. Mundo Tinta no se hace responsable de las transacciones que realices con Amazon o cualquier otro tercero.
+          Para más información sobre la política de privacidad de Shopify y sus términos de servicio, puedes consultar su sitio web oficial.
         </p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-3">Exclusión de Responsabilidad</h2>

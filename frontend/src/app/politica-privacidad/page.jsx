@@ -52,13 +52,15 @@ export default function PoliticaPrivacidadPage() {
           Para obtener más información general sobre las cookies, lee el artículo "Qué son las cookies" en el sitio web de Cookie Consent.
         </p>
         
-        <h2 className="text-2xl font-semibold mt-6 mb-3">Políticas de Privacidad de Socios Publicitarios</h2>
-        <p>Este sitio web participa en el Programa de Afiliados de Amazon EU. Para más información sobre cómo Amazon maneja los datos, por favor consulta su política de privacidad. Mundo Tinta no tiene otros socios publicitarios directos que recopilen información a través de este sitio web en este momento.</p>
+        <h2 className="text-2xl font-semibold mt-6 mb-3">Shopify y Procesamiento de Pagos</h2>
         <p>
-          Los servidores de anuncios o las redes publicitarias de terceros (como los utilizados por Amazon para mostrar sus anuncios de productos) pueden utilizar tecnologías como cookies, JavaScript o Web Beacons que se utilizan en sus respectivos anuncios y enlaces que aparecen en Mundo Tinta, que se envían directamente al navegador de los usuarios. Reciben automáticamente tu dirección IP cuando esto ocurre. Estas tecnologías se utilizan para medir la efectividad de sus campañas publicitarias y/o para personalizar el contenido publicitario que ves en los sitios web que visitas.
+          Nuestro sitio utiliza Shopify como plataforma de comercio electrónico. Shopify procesa la información de tus pedidos, pagos y datos personales según su propia política de privacidad. Te recomendamos que consultes la política de privacidad de Shopify para obtener información detallada sobre cómo manejan tus datos.
         </p>
         <p>
-          Ten en cuenta que Mundo Tinta no tiene acceso ni control sobre estas cookies que utilizan los anunciantes de terceros.
+          La información proporcionada durante el proceso de compra, como tu nombre, dirección, correo electrónico y detalles de pago, es procesada por Shopify con el único propósito de completar tu transacción y proporcionarte el mejor servicio posible.
+        </p>
+        <p>
+          Mundo Tinta no almacena información de tarjetas de crédito, ya que todos los datos de pago son manejados directamente por los procesadores de pago seguros de Shopify.
         </p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-3">Políticas de Privacidad de Terceros</h2>

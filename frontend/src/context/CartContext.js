@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import { createCheckout } from '@/config/shopify';
 
 // Crear el contexto del carrito
 const CartContext = createContext();
@@ -9,140 +10,126 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
   // Estado para almacenar los items del carrito
   const [cartItems, setCartItems] = useState([]);
+  const [isClient, setIsClient] = useState(false);
   
-  // Cargar el carrito del localStorage al iniciar
+  // Inicializar desde localStorage cuando se monta el componente
   useEffect(() => {
-    const storedCart = localStorage.getItem('cartItems');
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
+    setIsClient(true);
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      try {
+        setCartItems(JSON.parse(savedCart));
+      } catch (e) {
+        console.error('Error al cargar el carrito desde localStorage:', e);
+      }
     }
   }, []);
   
-  // Guardar el carrito en localStorage cuando cambia
+  // Guardar en localStorage cuando cambie el carrito
   useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (isClient && cartItems.length > 0) {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+  }, [cartItems, isClient]);
   
   // Añadir un libro al carrito
   const addToCart = (book) => {
-    setCartItems((prevItems) => {
-      // Verificar si el libro ya está en el carrito
-      const existingItem = prevItems.find(item => item.id === book.id);
-      
-      if (existingItem) {
-        // Si ya existe, incrementar cantidad
-        return prevItems.map(item => 
-          item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        // Si no existe, añadir nuevo libro con cantidad 1
-        return [...prevItems, { ...book, quantity: 1 }];
+    setCartItems(prevItems => {
+      // Verificar si el libro ya está en el carrito con el mismo formato
+      const existingItemIndex = prevItems.findIndex(
+        item => item.id === book.id && item.format === book.format
+      );
+
+      // Si el libro ya existe, incrementar la cantidad
+      if (existingItemIndex !== -1) {
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex].quantity += 1;
+        return updatedItems;
       }
+
+      // Si no existe, añadir el nuevo libro con cantidad 1
+      return [...prevItems, { ...book, quantity: 1 }];
     });
-    
-    // Disparar evento personalizado para notificar cambios en el carrito
-    window.dispatchEvent(new Event('cart-updated'));
   };
   
-  // Remover libro del carrito
+  // Eliminar un libro del carrito
   const removeFromCart = (bookId) => {
-    setCartItems((prevItems) => {
-      const updatedCart = prevItems.filter(item => item.id !== bookId);
-      return updatedCart;
-    });
-    
-    // Disparar evento personalizado
-    window.dispatchEvent(new Event('cart-updated'));
+    setCartItems(prevItems => 
+      prevItems.filter(item => item.id !== bookId)
+    );
   };
   
-  // Incrementar cantidad de un libro
+  // Aumentar cantidad
   const increaseQuantity = (bookId) => {
-    setCartItems((prevItems) =>
-      prevItems.map(item =>
-        item.id === bookId ? { ...item, quantity: item.quantity + 1 } : item
+    setCartItems(prevItems => 
+      prevItems.map(item => 
+        item.id === bookId 
+          ? { ...item, quantity: item.quantity + 1 } 
+          : item
       )
     );
-    window.dispatchEvent(new Event('cart-updated'));
   };
   
-  // Disminuir cantidad de un libro
+  // Disminuir cantidad
   const decreaseQuantity = (bookId) => {
-    setCartItems((prevItems) => {
-      // Encontrar el item y verificar su cantidad
-      const targetItem = prevItems.find(item => item.id === bookId);
-      
-      if (targetItem.quantity === 1) {
-        // Si la cantidad es 1, remover el libro
-        return prevItems.filter(item => item.id !== bookId);
-      } else {
-        // Sino, disminuir la cantidad
-        return prevItems.map(item =>
-          item.id === bookId ? { ...item, quantity: item.quantity - 1 } : item
-        );
-      }
-    });
-    window.dispatchEvent(new Event('cart-updated'));
+    setCartItems(prevItems => 
+      prevItems.map(item => 
+        item.id === bookId && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 } 
+          : item
+      )
+    );
   };
   
-  // Limpiar el carrito
+  // Vaciar carrito
   const clearCart = () => {
     setCartItems([]);
-    window.dispatchEvent(new Event('cart-updated'));
+    if (isClient) {
+      localStorage.removeItem('cartItems');
+    }
   };
   
-  // Obtener la cantidad total de items
+  // Obtener el número total de items en el carrito
   const getTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
+    return cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
   };
   
-  // Redirección a Amazon como afiliado
-  const redirectToAmazon = (bookTitle, isbn) => {
-    // Crear URL de afiliado de Amazon
-    // Amazon Associate ID: reemplazar "your-affiliate-id" con tu ID de afiliado real
-    const affiliateId = "your-affiliate-id";
-    const searchQuery = encodeURIComponent(bookTitle || isbn);
-    const amazonUrl = `https://www.amazon.es/s?k=${searchQuery}&tag=${affiliateId}`;
-    
-    // Abrir en una nueva pestaña
-    window.open(amazonUrl, '_blank');
-    
-    return true;
-  };
-  
-  // Redirección para comprar todo el carrito
-  const buyAllItems = () => {
-    // Crear URL con todos los ISBNs o títulos
-    const searchQuery = cartItems
-      .map(item => encodeURIComponent(item.isbn || item.title))
-      .join('+');
-    
-    // Amazon Associate ID: reemplazar "your-affiliate-id" con tu ID de afiliado real
-    const affiliateId = "your-affiliate-id";
-    const amazonUrl = `https://www.amazon.es/s?k=${searchQuery}&tag=${affiliateId}`;
-    
-    // Abrir en una nueva pestaña
-    window.open(amazonUrl, '_blank');
-    
-    // Opcionalmente, limpiar el carrito después de la compra
-    // clearCart();
-    
-    return true;
+  // Procesar compra
+  const buyAllItems = async () => {
+    try {
+      // Preparar los items para Shopify
+      const shopifyItems = cartItems.map(item => ({
+        variantId: item.variantId || item.formats?.find(f => f.type === item.format)?.variantId,
+        quantity: item.quantity
+      })).filter(item => item.variantId); // Filtrar items sin variantId
+
+      if (shopifyItems.length === 0) {
+        throw new Error("No hay productos válidos en el carrito");
+      }
+
+      // Crear el checkout
+      const checkoutUrl = await createCheckout(shopifyItems);
+      
+      // Redirigir al checkout de Shopify
+      window.location.href = checkoutUrl;
+      
+    } catch (error) {
+      console.error("Error al procesar la compra:", error);
+      alert("Ha ocurrido un error al procesar la compra. Por favor, inténtalo de nuevo.");
+    }
   };
   
   return (
-    <CartContext.Provider
-      value={{
-        cartItems,
-        addToCart,
-        removeFromCart,
-        increaseQuantity,
-        decreaseQuantity,
-        clearCart,
-        getTotalItems,
-        redirectToAmazon,
-        buyAllItems
-      }}
-    >
+    <CartContext.Provider value={{
+      cartItems,
+      addToCart,
+      removeFromCart,
+      increaseQuantity,
+      decreaseQuantity,
+      clearCart,
+      buyAllItems,
+      getTotalItems
+    }}>
       {children}
     </CartContext.Provider>
   );
@@ -150,9 +137,5 @@ export function CartProvider({ children }) {
 
 // Hook personalizado para usar el contexto del carrito
 export function useCart() {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart debe ser usado dentro de un CartProvider');
-  }
-  return context;
+  return useContext(CartContext);
 }

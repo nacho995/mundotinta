@@ -8,9 +8,6 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:500
 // Variable para controlar si estamos usando datos de respaldo
 let isUsingFallbackData = false;
 
-// Prefijo para los enlaces de afiliado de Amazon
-const AMAZON_AFFILIATE_ID = process.env.NEXT_PUBLIC_AMAZON_AFFILIATE_ID || 'mundotinta-21';
-
 // Función para manejar la expiración del token y cerrar sesión
 const handleTokenExpired = () => {
   if (typeof window !== 'undefined') {
@@ -72,25 +69,6 @@ const getFromLocalStorage = (key, defaultValue = []) => {
     }
   }
   return defaultValue;
-};
-
-// Generar un enlace de afiliado para Amazon
-const generateAmazonAffiliateLink = (originalLink) => {
-  if (!originalLink) return '';
-  
-  try {
-    const url = new URL(originalLink);
-    
-    // Añadir el tag de afiliado si es un enlace de Amazon
-    if (url.hostname.includes('amazon')) {
-      url.searchParams.set('tag', AMAZON_AFFILIATE_ID);
-    }
-    
-    return url.toString();
-  } catch (error) {
-    console.error('Error generando enlace de afiliado:', error);
-    return originalLink; // Devolver el enlace original si hay un error
-  }
 };
 
 // Definición del servicio de API
@@ -338,49 +316,6 @@ export const apiService = {
     }
   },
   
-  // Función para registrar una redirección a Amazon (para seguimiento de compras potenciales)
-  registerAmazonRedirect: async (bookId, bookType = 'physical') => {
-    const token = getAuthToken();
-    
-    // Esta función no requiere autenticación estricta, pero sí registramos si el usuario está autenticado
-    const isAuthenticated = !!token;
-    
-    try {
-      // Crear headers básicos
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-      
-      // Añadir token de autorización si existe
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-      
-      const response = await fetch(`${BACKEND_URL}/api/analytics/amazon-redirect`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          bookId: Number(bookId),
-          bookType, // physical, ebook, audiobook
-          timestamp: new Date().toISOString(),
-          isAuthenticated
-        })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.warn('Error al registrar redirección (no crítico)');
-        // No lanzamos error para evitar interrumpir la navegación del usuario
-      }
-      
-      return { success: true, message: 'Redirección registrada' };
-    } catch (error) {
-      console.error('Error al registrar redirección:', error);
-      // No propagamos el error para evitar interrumpir la navegación del usuario
-      return { success: false, message: 'Error al registrar redirección' };
-    }
-  },
-  
   // Función para marcar un libro como comprado manualmente
   markBookAsPurchased: async (bookId, purchaseInfo = {}) => {
     const token = getAuthToken();
@@ -621,62 +556,6 @@ export const apiService = {
     return remoteBooks;
   },
   
-  // Función para generar enlaces de afiliado para un libro
-  getAffiliateLinks: async (bookId) => {
-    try {
-      // Realizar petición - no necesita token pues son datos públicos
-      const response = await fetch(`${BACKEND_URL}/api/books/${bookId}/affiliate-links`);
-      
-      // Si tenemos un 404, podemos devolver directamente enlaces por defecto
-      if (response.status === 404) {
-        console.warn(`Libro ${bookId} no encontrado para enlaces de afiliado, usando fallback`);
-        return {
-          title: 'Libro',
-          physical: generateAmazonAffiliateLink(`https://www.amazon.es/s?k=libros&ref=${AMAZON_AFFILIATE_ID}`),
-          ebook: generateAmazonAffiliateLink(`https://www.amazon.es/s?k=ebooks&ref=${AMAZON_AFFILIATE_ID}`),
-          audiobook: null,
-        };
-      }
-      
-      // Usar safeParseJSON para evitar errores con respuestas HTML
-      const data = await safeParseJSON(response);
-      
-      // Si tenemos error de parsing JSON, usar fallback
-      if (data.isJsonError) {
-        console.warn('Error al parsear JSON de enlaces de afiliado, usando fallback');
-        return {
-          title: 'Libro',
-          physical: generateAmazonAffiliateLink(`https://www.amazon.es/s?k=libros&ref=${AMAZON_AFFILIATE_ID}`),
-          ebook: generateAmazonAffiliateLink(`https://www.amazon.es/s?k=ebooks&ref=${AMAZON_AFFILIATE_ID}`),
-          audiobook: null,
-        };
-      }
-      
-      // Si la respuesta no es ok, pero hemos podido parsear el JSON
-      if (!response.ok) {
-        console.warn('Error al obtener enlaces de afiliado:', data.message || 'Error desconocido');
-        throw new Error(data.message || 'Error al obtener enlaces de afiliado');
-      }
-      
-      // Aplicar el ID de afiliado a todos los enlaces
-      return {
-        title: data.title || 'Libro',
-        physical: generateAmazonAffiliateLink(data.physical || `https://www.amazon.es/dp/${data.isbn || 'B0RANDOM'}`),
-        ebook: generateAmazonAffiliateLink(data.ebook || `https://www.amazon.es/dp/${data.isbn || 'B0RANDOM'}?format=ebook`),
-        audiobook: data.audiobook ? generateAmazonAffiliateLink(data.audiobook) : null,
-      };
-    } catch (error) {
-      console.error('Error al obtener enlaces de afiliado:', error);
-      // Implementación de fallback para garantizar respuesta
-      return {
-        title: 'Libro',
-        physical: generateAmazonAffiliateLink(`https://www.amazon.es/s?k=libros&ref=${AMAZON_AFFILIATE_ID}`),
-        ebook: generateAmazonAffiliateLink(`https://www.amazon.es/s?k=ebooks&ref=${AMAZON_AFFILIATE_ID}`),
-        audiobook: null,
-      };
-    }
-  },
-  
   // Función para obtener información del usuario
   getUserProfile: async () => {
     const token = getAuthToken();
@@ -803,9 +682,8 @@ export const apiService = {
       'que eres': 'Soy el asistente virtual de Mundo-tinta, diseñado para ayudarte a encontrar libros y responder tus preguntas sobre nuestra librería.',
       'horario': 'Somos una librería online disponible 24/7. ¡Puedes explorar nuestro catálogo en cualquier momento!',
       'contacto': 'Puedes contactarnos a través de nuestro formulario en la sección de contacto o enviando un correo a info@mundotinta.com',
-      'envío': 'Los envíos se realizan a través de Amazon, siguiendo sus políticas de envío. Normalmente entre 1-3 días laborables para clientes Prime y 3-5 días para envíos estándar.',
-      'devoluciones': 'Las devoluciones siguen la política de Amazon, que generalmente permite devoluciones en un plazo de 30 días.',
-      'afiliados': 'Somos afiliados de Amazon. Cuando compras a través de nuestros enlaces, recibimos una pequeña comisión sin coste adicional para ti.',
+      'envío': 'Los envíos suelen realizarse en un plazo de 2-5 días hábiles. Consulta nuestra política de envíos para más detalles.',
+      'devoluciones': 'Aceptamos devoluciones en un plazo de 30 días desde la recepción del producto.',
       'novedades': 'Puedes consultar nuestras últimas novedades en la página principal o en la sección de "Novedades".',
       'géneros': 'Tenemos una amplia selección de géneros, incluyendo fantasía, ciencia ficción, misterio, romance, y muchos más. ¿Hay algún género específico que te interese?',
       'ebook': 'Sí, muchos de nuestros libros están disponibles en formato ebook. Puedes ver las opciones específicas en la página de cada libro.',

@@ -1,0 +1,9 @@
+Handle,Title,Body (HTML),Vendor,Type,Tags,Published,Option1 Name,Option1 Value,Variant Price,Variant Compare At Price,Image Src,Image Position,Image Alt Text,Metafield: custom.author [single_line_text_field],Metafield: custom.genre [single_line_text_field],Metafield: custom.page_count [number_integer]
+"el-nombre-del-viento","El Nombre del Viento","La legendaria historia de Kvothe, un músico y mago.","Editorial MundoTinta","Libro","Fantasía, colección-fantasia","TRUE","Formato","Físico","19.99","","https://mundo-tinta.com/images/covers/el-nombre-del-viento.jpg","1","Portada de El Nombre del Viento","Patrick Rothfuss","Fantasía","300"
+"cien-anos-de-soledad","Cien Años de Soledad","La saga de la familia Buendía en el mítico pueblo de Macondo.","Editorial MundoTinta","Libro","Realismo Mágico","TRUE","Formato","Físico","15.5","","https://mundo-tinta.com/images/covers/cien-anos-de-soledad.jpg","1","Portada de Cien Años de Soledad","Gabriel García Márquez","Realismo Mágico","300"
+"dune","Dune","En el lejano planeta desértico Arrakis, la única fuente de la especia melange.","Editorial MundoTinta","Libro","Ciencia Ficción, colección-ciencia-ficcion","TRUE","Formato","Físico","22","","https://mundo-tinta.com/images/covers/dune.jpg","1","Portada de Dune","Frank Herbert","Ciencia Ficción","300"
+"1984","1984","Una sombría visión de un futuro totalitario donde el Gran Hermano todo lo ve.","Editorial MundoTinta","Libro","Distopía","TRUE","Formato","Físico","12.75","","https://mundo-tinta.com/images/covers/1984.jpg","1","Portada de 1984","George Orwell","Distopía","300"
+"el-nombre-del-viento","","","","","","TRUE","Formato","Ebook","15.99","","","","","","",""
+"cien-anos-de-soledad","","","","","","TRUE","Formato","Ebook","12.40","","","","","","",""
+"dune","","","","","","TRUE","Formato","Ebook","17.60","","","","","","",""
+"1984","","","","","","TRUE","Formato","Ebook","10.20","","","","","","",""

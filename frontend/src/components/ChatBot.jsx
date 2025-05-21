@@ -250,28 +250,28 @@ const ChatBot = () => {
             title: 'El Camino de los Reyes',
             author: 'Brandon Sanderson',
             genre: 'Fantasía Épica',
-            coverImage: 'https://m.media-amazon.com/images/I/71+WuA9YlFL._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/el-camino-de-los-reyes.jpg'
           },
           {
             _id: 'f2',
             title: 'El Nombre del Viento',
             author: 'Patrick Rothfuss',
             genre: 'Fantasía',
-            coverImage: 'https://m.media-amazon.com/images/I/81XJBmQZ9mL._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/el-nombre-del-viento.jpg'
           },
           {
             _id: 'f3',
             title: 'Juego de Tronos',
             author: 'George R.R. Martin',
             genre: 'Fantasía Épica',
-            coverImage: 'https://m.media-amazon.com/images/I/91+NBrXG-PL._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/juego-de-tronos.jpg'
           },
           {
             _id: 'f4',
             title: 'El Ojo del Mundo',
             author: 'Robert Jordan',
             genre: 'Fantasía Épica',
-            coverImage: 'https://m.media-amazon.com/images/I/71MxdQ1allL._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/el-ojo-del-mundo.jpg'
           }
         ];
         
@@ -281,35 +281,35 @@ const ChatBot = () => {
             title: 'Fundación',
             author: 'Isaac Asimov',
             genre: 'Ciencia Ficción',
-            coverImage: 'https://m.media-amazon.com/images/I/61sZhswNzPL._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/fundacion.jpg'
           },
           {
             _id: 's2',
             title: 'Dune',
             author: 'Frank Herbert',
             genre: 'Ciencia Ficción',
-            coverImage: 'https://m.media-amazon.com/images/I/91DcW0Y5Y9L._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/dune.jpg'
           },
           {
             _id: 's3',
             title: 'El Problema de los Tres Cuerpos',
             author: 'Liu Cixin',
             genre: 'Ciencia Ficción',
-            coverImage: 'https://m.media-amazon.com/images/I/91yiQzp+eQL._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/el-problema-de-los-tres-cuerpos.jpg'
           },
           {
             _id: 's4',
             title: 'Hyperion',
             author: 'Dan Simmons',
             genre: 'Ciencia Ficción',
-            coverImage: 'https://m.media-amazon.com/images/I/71pvktXuRQL._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/hyperion.jpg'
           },
           {
             _id: 's5',
             title: 'La Mano Izquierda de la Oscuridad',
             author: 'Ursula K. Le Guin',
             genre: 'Ciencia Ficción',
-            coverImage: 'https://m.media-amazon.com/images/I/915ur3-5b8L._AC_UF1000,1000_QL80_.jpg'
+            coverImage: '/images/books/la-mano-izquierda-de-la-oscuridad.jpg'
           }
         ];
         
