@@ -1,6 +1,7 @@
 'use client'; // Necesario para hooks como useState, useEffect
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import BookCard from '@/components/BookCard';
 import useGoogleBooks from '@/hooks/useGoogleBooks'; // Importar el hook de Google Books
 
@@ -203,9 +204,9 @@ export default function BibliotecaPage() {
                 <div className="mt-6 w-full max-w-sm mx-auto bg-gradient-to-r from-stone-800 to-stone-900 p-6 rounded-lg border border-amber-700/20">
                   <p className="text-amber-200 font-serif text-center text-sm italic mb-2">Mientras tanto, te invitamos a</p>
                   <div className="flex justify-center space-x-4">
-                    <a href="/" className="px-5 py-2 bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 text-amber-100 rounded-md shadow-md transition-all duration-300 text-sm font-medium">
+                    <Link href="/" className="px-5 py-2 bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 text-amber-100 rounded-md shadow-md transition-all duration-300 text-sm font-medium">
                       Volver al inicio
-                    </a>
+                    </Link>
                     <button onClick={() => window.location.reload()} className="px-5 py-2 border border-amber-600 hover:bg-amber-700/20 text-amber-300 rounded-md shadow-md transition-all duration-300 text-sm font-medium">
                       Reintentar
                     </button>
