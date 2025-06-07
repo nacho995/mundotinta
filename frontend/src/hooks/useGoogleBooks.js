@@ -96,7 +96,7 @@ function useGoogleBooks() {
     setBooks([]);
     
     try {
-      // Obtener libros desde Shopify usando shopify-buy
+      // Obtener libros desde Shopify en lugar de Google Books
       const allBooks = await getBooksByGenre();
       
       console.log(`Libros obtenidos de Shopify: ${allBooks.length}`);
